@@ -23,6 +23,11 @@ namespace FarmApp.Infrastructure.Data.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var adminRole = new Role { Id = 1, RoleName = "admin" };
+            var userRole = new Role { Id = 2, RoleName = "user" };
+            var adminUser1 = new User { Id = 1, UserName = "Админ", Login = "admin", Password = "123456", RoleId = adminRole.Id };
+            var simpleUser2 = new User { Id = 2, UserName = "Пользователь", Login = "user", Password = "123456", RoleId = userRole.Id };
+
             var user = modelBuilder.Entity<User>();
             user.ToTable(Table.User, Schema.Dist);
             user.Property(p => p.UserName).IsRequired().HasMaxLength(255);
@@ -40,7 +45,6 @@ namespace FarmApp.Infrastructure.Data.Contexts
             var drug = modelBuilder.Entity<Drug>();
             drug.ToTable(Table.Drug, Schema.Tab);
             drug.Property(p => p.DrugName).IsRequired().HasMaxLength(50);
-            
             drug.Property(p => p.IsGeneric).IsRequired().HasDefaultValue(false);
             drug.Property(p => p.IsDeleted).IsRequired().HasDefaultValue(false);
 
@@ -50,7 +54,8 @@ namespace FarmApp.Infrastructure.Data.Contexts
                 relShip.DeleteBehavior = DeleteBehavior.Restrict;
             }
 
-
+            modelBuilder.Entity<Role>().HasData(adminRole, userRole);
+            modelBuilder.Entity<User>().HasData(adminUser1, simpleUser2);
         }
 
 
