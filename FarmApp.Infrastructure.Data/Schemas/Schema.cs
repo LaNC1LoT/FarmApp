@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FarmApp.Infrastructure.Data.Schemas
 {
-    public static class Schema
+    internal static class Schema
     {
         public const string Dist = "dist";
         public const string Tab = "tab";
