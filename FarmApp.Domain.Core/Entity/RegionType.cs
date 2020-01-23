@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FarmApp.Domain.Core.Entity
 {
-    class RegionType
+    public class RegionType
     {
     }
 }

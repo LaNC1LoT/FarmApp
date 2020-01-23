@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FarmApp.Domain.Core.Entity
 {
-    class Vendor
+    public class Vendor
     {
     }
 }

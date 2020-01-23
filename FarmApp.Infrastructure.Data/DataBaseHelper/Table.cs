@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FarmApp.Infrastructure.Data.Tables
+namespace FarmApp.Infrastructure.Data.DataBaseHelper
 {
     internal class Table
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace FarmApp.Infrastructure.Data.Schemas
+namespace FarmApp.Infrastructure.Data.DataBaseHelper
 {
     internal static class Schema
     {

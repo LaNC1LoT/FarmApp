@@ -4,7 +4,14 @@ using System.Text;
 
 namespace FarmApp.Domain.Core.Entity
 {
-    class Region
+    public class Region
     {
+        public int Id { get; set; }
+        public int RegionId { get; set; }
+        public string RegionName { get; set; }
+        public long Population { get; set; }
+        public bool IsDeleted { get; set; } 
+        //public virtual Region Region { get; set; }
+
     }
 }
