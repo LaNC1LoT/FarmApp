@@ -9,10 +9,14 @@ namespace FarmApp.Domain.Core.Entity
     /// </summary>
     public class Role
     {
+        public Role()
+        {
+            Users = new HashSet<User>();
+        }
         public int Id { get; set; }
         public string RoleName { get; set; }
         public bool IsDisabled { get; set; }
         public bool IsDeleted { get; set; }
-        public List<User> Users { get; set; }
+        public virtual ICollection<User> Users { get; set; }
     }
 }

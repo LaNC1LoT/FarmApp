@@ -6,5 +6,9 @@ namespace FarmApp.Domain.Core.Entity
 {
     public class Vendor
     {
+        public int Id { get; set; }
+        public string VendorName { get; set; }
+        public bool IsDomestic { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

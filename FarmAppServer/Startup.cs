@@ -38,9 +38,9 @@ namespace FarmAppServer
             string connection = Configuration.GetConnectionString("FarmAppContext");
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(options =>
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddJsonOptions(options =>
             {
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
             services.AddDbContext<FarmAppContext>(options => options.UseSqlServer(connection), ServiceLifetime.Scoped);
@@ -69,7 +69,8 @@ namespace FarmAppServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory logger)
+        //IHostingEnvironment env, 
+        public void Configure(IApplicationBuilder app, ILoggerFactory logger)
         {
             app.Use(async (ctx, next) =>
             {
@@ -80,10 +81,10 @@ namespace FarmAppServer
                 }
             });
 
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
@@ -94,7 +95,7 @@ namespace FarmAppServer
             app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString()).AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();
 
-            app.UseMvc();
+            //app.UseMvc();
         }
     }
 }
