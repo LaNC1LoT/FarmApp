@@ -14,8 +14,8 @@ namespace FarmApp.Domain.Core.Entity
         public string Password { get; set; }
         public string UserName { get; set; }
         public int RoleId { get; set; }
-        public bool IsDisabled { get; set; }
-        public bool IsDeleted { get; set; }
-        public Role Role { get; set; }
+        public bool? IsDisabled { get; set; }
+        public bool? IsDeleted { get; set; }
+        public virtual Role Role { get; set; }
     }
 }

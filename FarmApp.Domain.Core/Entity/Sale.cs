@@ -12,8 +12,8 @@ namespace FarmApp.Domain.Core.Entity
         public DateTime SaleDate { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
-        public bool IsDiscount { get; set; }
-        public bool IsDeleted { get; set; }
+        public bool? IsDiscount { get; set; }
+        public bool? IsDeleted { get; set; }
         public virtual Drug Drug { get; set; }
         public virtual Pharmacy Pharmacy { get; set; }
     }

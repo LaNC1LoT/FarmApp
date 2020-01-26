@@ -36,14 +36,8 @@ namespace FarmAppServer
         {
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
             string connection = Configuration.GetConnectionString("FarmAppContext");
-
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0).AddJsonOptions(options =>
-            {
-                //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            });
-
-            services.AddDbContext<FarmAppContext>(options => options.UseSqlServer(connection), ServiceLifetime.Scoped);
+            services.AddDbContext<FarmAppContext>(options => options.UseSqlServer(connection));
+            services.AddControllers();
             services.AddCors();
 
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
@@ -69,8 +63,7 @@ namespace FarmAppServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        //IHostingEnvironment env, 
-        public void Configure(IApplicationBuilder app, ILoggerFactory logger)
+        public void Configure(IApplicationBuilder app)
         {
             app.Use(async (ctx, next) =>
             {
@@ -81,16 +74,21 @@ namespace FarmAppServer
                 }
             });
 
-            //if (env.IsDevelopment())
-            //{
-            //    app.UseDeveloperExceptionPage();
-            //}
+            app.UseDeveloperExceptionPage();
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers(); // подключаем маршрутизацию на контроллеры
+            });
 
             using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<FarmAppContext>();
                 context.Database.Migrate();
             }
+
+
 
             app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString()).AllowAnyHeader().AllowAnyMethod());
             app.UseAuthentication();

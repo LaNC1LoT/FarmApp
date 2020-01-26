@@ -1,0 +1,21 @@
+.mat-card {
+    display: flex;
+    flex-direction: column;
+    background-color: floralwhite;
+    width: 300px;
+    height: 230px;
+    border: 3px solid darkslateblue;
+    margin: auto;
+    margin-top: 10%;
+  }
+  
+  .mat-card > * {
+    margin: 5px;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .mat-icon {
+    margin-right: 5px;
+  }
+  
