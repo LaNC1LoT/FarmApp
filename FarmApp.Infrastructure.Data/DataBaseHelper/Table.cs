@@ -15,5 +15,6 @@ namespace FarmApp.Infrastructure.Data.DataBaseHelper
         public const string Region = "Regions";
         public const string RegionType = "RegionTypes";
         public const string Sale = "Sales";
+        public const string ApiMethod = "ApiMethods";
     }
 }

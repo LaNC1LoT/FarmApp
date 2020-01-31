@@ -27,13 +27,21 @@ namespace FarmApp.Infrastructure.Data.DataBaseHelper
 
         public static IEnumerable<RegionType> InitRegionTypes
         {
-            get => new List<RegionType>()
+            get => new List<RegionType>(5)
             {
                 new RegionType{ Id = 1, RegionTypeName = "Государство" },
                 new RegionType{ Id = 2, RegionTypeName = "Субъект(регион)" },
                 new RegionType{ Id = 3, RegionTypeName = "Город" },
                 new RegionType{ Id = 4, RegionTypeName = "Сёла, деревни и др." },
                 new RegionType{ Id = 5, RegionTypeName = "Микрорайон" }
+            };
+        }
+
+        public static IEnumerable<ApiMethod> InitApiMethods
+        {
+            get => new List<ApiMethod>(1)
+            {
+                new ApiMethod{ ApiMethodName = "LoginUser", StoredProcedureName = "UserAutification"}
             };
         }
 

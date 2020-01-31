@@ -3,15 +3,34 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FarmApp.Infrastructure.Data.Migrations
 {
-    public partial class FirstMig : Migration
+    public partial class NewDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "api");
+
             migrationBuilder.EnsureSchema(
                 name: "dist");
 
             migrationBuilder.EnsureSchema(
                 name: "tab");
+
+            migrationBuilder.CreateTable(
+                name: "ApiMethods",
+                schema: "api",
+                columns: table => new
+                {
+                    ApiMethodName = table.Column<string>(maxLength: 255, nullable: false),
+                    StoredProcedureName = table.Column<string>(maxLength: 350, nullable: false),
+                    IsDisabled = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApiMethods", x => x.ApiMethodName)
+                        .Annotation("SqlServer:Clustered", true);
+                });
 
             migrationBuilder.CreateTable(
                 name: "CodeAthTypes",
@@ -244,6 +263,12 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "api",
+                table: "ApiMethods",
+                columns: new[] { "ApiMethodName", "StoredProcedureName" },
+                values: new object[] { "LoginUser", "UserAutification" });
+
+            migrationBuilder.InsertData(
                 schema: "dist",
                 table: "RegionTypes",
                 columns: new[] { "Id", "RegionTypeName" },
@@ -341,6 +366,10 @@ namespace FarmApp.Infrastructure.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "ApiMethods",
+                schema: "api");
+
             migrationBuilder.DropTable(
                 name: "Users",
                 schema: "dist");

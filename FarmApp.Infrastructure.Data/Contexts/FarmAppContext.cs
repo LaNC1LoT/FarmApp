@@ -7,6 +7,7 @@ namespace FarmApp.Infrastructure.Data.Contexts
 {
     public class FarmAppContext : DbContext
     {
+        public virtual DbSet<ApiMethod> ApiMethods { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Drug> Drugs { get; set; }
@@ -24,6 +25,17 @@ namespace FarmApp.Infrastructure.Data.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ApiMethod>(entity =>
+            {
+                entity.ToTable(Table.ApiMethod, Schema.Api);
+                entity.HasKey(h => h.ApiMethodName).IsClustered();
+                entity.Property(p => p.ApiMethodName).IsRequired().HasMaxLength(255);
+                entity.Property(p => p.StoredProcedureName).IsRequired().HasMaxLength(350);
+                entity.Property(p => p.IsDisabled).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
+                entity.Property(p => p.IsDeleted).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
+                entity.HasData(InitData.InitApiMethods);
+            });
+
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.ToTable(Table.Role, Schema.Dist);

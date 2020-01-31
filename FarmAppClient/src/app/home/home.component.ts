@@ -12,9 +12,10 @@ export class HomeComponent implements OnInit {
 
   constructor(private router: Router, private service: UserService) { }
 
-  ngOnInit(){
-    if (localStorage.getItem('token') == null)
+  ngOnInit() {
+    if (localStorage.getItem('token') == null) {
       this.router.navigateByUrl('/login');
+    }
   }
   // ngOnInit() {
   //   this.service.getUserProfile().subscribe(

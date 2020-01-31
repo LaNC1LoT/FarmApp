@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmApp.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(FarmAppContext))]
-    [Migration("20200126122437_FirstMig")]
-    partial class FirstMig
+    [Migration("20200131124721_NewDb")]
+    partial class NewDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,42 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("FarmApp.Domain.Core.Entity.ApiMethod", b =>
+                {
+                    b.Property<string>("ApiMethodName")
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
+                    b.Property<bool?>("IsDeleted")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("((0))");
+
+                    b.Property<bool?>("IsDisabled")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValueSql("((0))");
+
+                    b.Property<string>("StoredProcedureName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(350)")
+                        .HasMaxLength(350);
+
+                    b.HasKey("ApiMethodName")
+                        .HasAnnotation("SqlServer:Clustered", true);
+
+                    b.ToTable("ApiMethods","api");
+
+                    b.HasData(
+                        new
+                        {
+                            ApiMethodName = "LoginUser",
+                            StoredProcedureName = "UserAutification"
+                        });
+                });
 
             modelBuilder.Entity("FarmApp.Domain.Core.Entity.CodeAthType", b =>
                 {
