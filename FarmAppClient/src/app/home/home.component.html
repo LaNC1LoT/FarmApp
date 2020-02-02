@@ -19,14 +19,13 @@
       </button>
       <button mat-raised-button color="warn" (click)="onLogout()" style="position: absolute; right: 0; margin-right: 15px;">Выйти</button >
     </mat-toolbar>
-    <img src="/assets/img/2.png">
-    <!-- <div class="card m-5" style="width:18rem" *ngIf="user">
+    <div class="card m-5" style="width:18rem" *ngIf="user">
       <ul class="list-group">
         <li class="list-group-item"><strong>ФИО : </strong>{{user.userName}}</li>
         <li class="list-group-item"><strong>Логин : </strong>{{user.login}}</li>
-        <li class="list-group-item"><strong>Роль : </strong>{{user.role.roleName}}</li>
+        <li class="list-group-item"><strong>Роль : </strong>{{user.roleName}}</li>
       </ul>
-    </div> -->
+    </div>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

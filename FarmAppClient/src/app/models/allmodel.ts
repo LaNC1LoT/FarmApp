@@ -1,7 +1,3 @@
-// tslint:disable-next-line: no-empty-interface
-interface IEntiy {
-}
-
 export class User {
     public id: number;
     public login: string;
@@ -13,7 +9,19 @@ export class User {
     public isDeleted: boolean;
 }
 
+export class Role {
+    public id: number;
+    public roleName: string;
+    public isDisabled: boolean;
+    public isDeleted: boolean;
+}
+
 export class RequestBody {
     public method: string;
     public param: string;
+}
+
+export class ResponseSuccess {
+    public id: number;
+    public result: string;
 }

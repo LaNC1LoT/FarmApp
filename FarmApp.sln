@@ -9,17 +9,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{91A34FF5-E5DF-48D8-B329-2E08B30593EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmApp.Domain.Core", "FarmApp.Domain.Core\FarmApp.Domain.Core.csproj", "{EF34D513-311D-4A70-85BA-2D5AEB43462E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FarmApp.Domain.Core", "FarmApp.Domain.Core\FarmApp.Domain.Core.csproj", "{EF34D513-311D-4A70-85BA-2D5AEB43462E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmApp.Infrastructure.Business", "FarmApp.Infrastructure.Business\FarmApp.Infrastructure.Business.csproj", "{7053E3B7-D2B4-4BB9-8430-AA4D5405F545}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FarmApp.Infrastructure.Business", "FarmApp.Infrastructure.Business\FarmApp.Infrastructure.Business.csproj", "{7053E3B7-D2B4-4BB9-8430-AA4D5405F545}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmApp.Service.Interfaces", "FarmApp.Service.Interfaces\FarmApp.Service.Interfaces.csproj", "{F3726FA6-CCB8-4643-A64B-7FE5471A793B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FarmApp.Service.Interfaces", "FarmApp.Service.Interfaces\FarmApp.Service.Interfaces.csproj", "{F3726FA6-CCB8-4643-A64B-7FE5471A793B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmApp.Infrastructure.Data", "FarmApp.Infrastructure.Data\FarmApp.Infrastructure.Data.csproj", "{23F926B4-6A47-4B47-BC77-5F867FC06BD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FarmApp.Infrastructure.Data", "FarmApp.Infrastructure.Data\FarmApp.Infrastructure.Data.csproj", "{23F926B4-6A47-4B47-BC77-5F867FC06BD8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmApp.Domain.Interfaces", "FarmApp.Domain.Interfaces\FarmApp.Domain.Interfaces.csproj", "{29BF33AE-1AA2-44A3-8BCD-3B500BA430DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FarmApp.Domain.Interfaces", "FarmApp.Domain.Interfaces\FarmApp.Domain.Interfaces.csproj", "{29BF33AE-1AA2-44A3-8BCD-3B500BA430DD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarmAppServer", "FarmAppServer\FarmAppServer.csproj", "{87DABDB3-63B1-46A7-BE07-1919918E85CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FarmAppServer", "FarmAppServer\FarmAppServer.csproj", "{87DABDB3-63B1-46A7-BE07-1919918E85CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

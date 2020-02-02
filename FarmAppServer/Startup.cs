@@ -1,13 +1,15 @@
-﻿using System;
-using System.Text;
-using FarmApp.Infrastructure.Data.Contexts;
+﻿using FarmApp.Infrastructure.Data.Contexts;
 using FarmAppServer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 
 namespace FarmAppServer
 {
@@ -28,8 +30,6 @@ namespace FarmAppServer
             string connection = Configuration.GetConnectionString("FarmAppContext");
             services.AddDbContext<FarmAppContext>(options => options.UseSqlServer(connection));
             services.AddControllers();
-
-            services.AddMvc().AddJsonOptions(x => x.JsonSerializerOptions.MaxDepth = 2);
 
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
 
@@ -54,18 +54,17 @@ namespace FarmAppServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseDeveloperExceptionPage();
-            app.UseAuthentication();
-            app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString()).AllowAnyHeader().AllowAnyMethod());
-
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
+            if (env.IsDevelopment())
             {
-                endpoints.MapControllers();
-            });
+                app.UseDeveloperExceptionPage();
+            }
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.Use(async (ctx, next) =>
             {
@@ -74,6 +73,11 @@ namespace FarmAppServer
                 {
                     ctx.Response.ContentLength = 0;
                 }
+            });
+            app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString()).AllowAnyHeader().AllowAnyMethod());
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
             });
 
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();

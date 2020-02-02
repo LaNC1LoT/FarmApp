@@ -7,8 +7,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 
+
 import { AppComponent } from './app.component';
-import { UserService } from './shared/user.service';
+import { MainService } from './shared/main.service';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
@@ -18,11 +19,18 @@ import * as Material from '@angular/material';
 
 import { LayoutModule } from '@angular/cdk/layout';
 import { BlockUIModule } from 'ng-block-ui';
+import { MatConfirmDialogComponent } from './mat-confirm-dialog/mat-confirm-dialog.component';
+import { UserComponent } from './home/users/user/user.component';
+import { UsersComponent } from './home/users/users.component';
+import { UserListComponent } from './home/users/user-list/user-list.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] }
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard],
+    children: [
+      { path: 'users', component: UsersComponent }
+    ] }
 ];
 
 @NgModule({
@@ -30,6 +38,10 @@ const routes: Routes = [
     AppComponent,
     LoginComponent,
     HomeComponent,
+    MatConfirmDialogComponent,
+    UserComponent,
+    UsersComponent,
+    UserListComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,7 +64,15 @@ const routes: Routes = [
     Material.MatSidenavModule,
     Material.MatSelectModule,
     Material.MatListModule,
-
+    Material.MatDialogModule,
+    Material.MatRadioModule,
+    Material.MatCheckboxModule,
+    Material.MatDatepickerModule,
+    Material.MatNativeDateModule,
+    Material.MatSnackBarModule,
+    Material.MatTableModule,
+    Material.MatPaginatorModule,
+    Material.MatSortModule,
   ],
   exports: [
     [RouterModule],
@@ -66,8 +86,17 @@ const routes: Routes = [
     Material.MatSidenavModule,
     Material.MatSelectModule,
     Material.MatListModule,
+    Material.MatDialogModule,
+    Material.MatRadioModule,
+    Material.MatCheckboxModule,
+    Material.MatDatepickerModule,
+    Material.MatNativeDateModule,
+    Material.MatSnackBarModule,
+    Material.MatTableModule,
+    Material.MatPaginatorModule,
+    Material.MatSortModule,
   ],
-  providers: [UserService, {
+  providers: [MainService, {
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true

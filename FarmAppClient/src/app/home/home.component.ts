@@ -1,33 +1,33 @@
-import { UserService } from './../shared/user.service';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MainService } from '../shared/main.service';
+import { User } from '../models/allmodel';
+import { HttpResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
+
 export class HomeComponent implements OnInit {
-  user : any;
 
-  constructor(private router: Router, private service: UserService) { }
-
-  ngOnInit() {
-    if (localStorage.getItem('token') == null) {
-      this.router.navigateByUrl('/login');
-    }
+  constructor(private router: Router, private service: MainService) { 
+    this.service.ngOnInit();
   }
-  // ngOnInit() {
-  //   this.service.getUserProfile().subscribe(
-  //     (res: any) => {
-  //       this.user = res;
-  //     },
-  //     (err: any) => {
-  //       console.log(err);
-  //     },
-  //   );
-  // }
 
+  user : User;
+  
+  ngOnInit(): void {
+    this.service.getUser().subscribe(
+      (res: User) => {
+        this.user = res;
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  }
 
   onLogout() {
     localStorage.removeItem('token');
