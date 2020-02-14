@@ -9,5 +9,6 @@ namespace FarmApp.Infrastructure.Data.DataBaseHelper
         public const string Dist = "dist";
         public const string Tab = "tab";
         public const string Api = "api";
+        public const string Log = "log";
     }
 }

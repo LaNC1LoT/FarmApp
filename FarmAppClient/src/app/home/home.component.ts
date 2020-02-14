@@ -12,13 +12,18 @@ import { HttpResponse } from '@angular/common/http';
 
 export class HomeComponent implements OnInit {
 
-  constructor(private router: Router, private service: MainService) { 
-    this.service.ngOnInit();
+  constructor(private router: Router, private service: MainService) {
+    console.log('Я home создан!');
   }
 
-  user : User;
-  
+  user: User;
+
   ngOnInit(): void {
+    if (localStorage.getItem('token') == null) {
+      this.router.navigateByUrl('/login');
+      return;
+    }
+
     this.service.getUser().subscribe(
       (res: User) => {
         this.user = res;

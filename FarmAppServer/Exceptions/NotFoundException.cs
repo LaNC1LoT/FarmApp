@@ -2,10 +2,10 @@
 
 namespace FarmAppServer.Exceptions
 {
-    public class BadRequestException : Exception
+    public class NotFoundException : Exception
     {
         public string Header { get; }
-        public BadRequestException(string message, string header = "Ошибка!")
+        public NotFoundException(string message, string header = "Ошибка!")
         : base(message)
         {
             Header = header;

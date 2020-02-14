@@ -1,6 +1,7 @@
+import { User } from './../models/allmodel';
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { User, RequestBody, ResponseSuccess } from '../models/allmodel';
+import { RequestBody, ResponseSuccess } from '../models/allmodel';
 import { timeout, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -10,23 +11,13 @@ import { BlockUI, NgBlockUI } from 'ng-block-ui';
   providedIn: 'root'
 })
 
-export class MainService implements OnInit {
+export class MainService {
 
   constructor(private http: HttpClient, private router: Router, private toast: ToastrService) { }
 
   @BlockUI() blockUI: NgBlockUI;
   private getToken = 'http://localhost:5000/gettoken';
 
-  ngOnInit() {
-    if (localStorage.getItem('token') == null) {
-      this.router.navigateByUrl('/login');
-    }
-
-    if (localStorage.getItem('token') != null) {
-      // this.router.navigateByUrl('/home');
-      console.log('crf');
-    }
-  }
 
   loginUser(user: User) {
     this.blockUI.start('Авторизация...');
@@ -62,7 +53,12 @@ export class MainService implements OnInit {
   getUser() {
     return this.http.get('http://localhost:5000/getuser');
   }
-  
+
+  getUsers() {
+    return this.http.get('http://localhost:5000/getusers');
+  }
+
+
   // getUsers() {
   //   return this.http.get(this.url);
   // }

@@ -64,7 +64,7 @@ namespace FarmAppServer
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.Use(async (ctx, next) =>
             {
@@ -74,7 +74,9 @@ namespace FarmAppServer
                     ctx.Response.ContentLength = 0;
                 }
             });
+
             app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString()).AllowAnyHeader().AllowAnyMethod());
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

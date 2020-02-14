@@ -3,30 +3,23 @@ using FarmApp.Infrastructure.Data.Contexts;
 using FarmAppServer.Exceptions;
 using FarmAppServer.Extantions;
 using FarmAppServer.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.IO;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace FarmAppServer.Controllers
 {
     [ApiController]
-    public class MainController: Controller
+    public class MainController : Controller
     {
         private readonly ApplicationSettings AppSettings;
         private readonly FarmAppContext Ctx;
@@ -38,50 +31,55 @@ namespace FarmAppServer.Controllers
 
         private async Task CheckMethod(RequestBody requestBody)
         {
-            if(requestBody == null)
-                throw new BadRequestException("Пустой запрос!", "Метод");
+            if (requestBody == null)
+                throw new BadRequestException("Пустой запрос!");
             if (!requestBody.Param.IsValidJson(out string errorMsg))
-                throw new BadRequestException(errorMsg, "Метод");
+                throw new BadRequestException(errorMsg);
             var method = await Ctx.ApiMethods.FirstOrDefaultAsync(x => x.ApiMethodName == requestBody.Method);
             if (method == null)
-                throw new BadRequestException("Метод не найден!", "Метод");
+                throw new BadRequestException("Метод не найден!");
             if (method.IsDisabled ?? true)
-                throw new BadRequestException("Метод заблокирован!", "Метод");
+                throw new BadRequestException("Метод заблокирован!");
             if (method.IsDeleted ?? true)
-                throw new BadRequestException("Метод удален!", "Метод");
+                throw new BadRequestException("Метод удален!");
         }
 
-        [HttpPost, Route("gettoken")]
+
+        [HttpPost, Route("GetToken")]
         public async Task<IActionResult> Auntification([FromBody]RequestBody requestBody)
         {
+            // Сразу создаем запись в логе
+            // method
+
+            var response = new ResponseBody();
             try
             {
-                await CheckMethod(requestBody).ConfigureAwait(false);
+                await CheckMethod(requestBody);
 
                 var user = JsonConvert.DeserializeObject<User>(requestBody.Param);
                 user = await Ctx.Users.FirstOrDefaultAsync(x => x.Login == user.Login && x.Password == user.Password);
 
                 if (user == null)
-                    return NotFound(new ResponseError { ErrHeader = "Аунтификация", ErrMsg = "Неверный логин или пароль!" });
+                    throw new NotFoundException("Неверный логин или пароль!", "Аунтификация");
                 if (user.IsDisabled ?? true)
-                    return BadRequest(new ResponseError { ErrHeader = "Аунтификация", ErrMsg = "Пользователь заблокирован!" });
+                    throw new BadRequestException("Пользователь заблокирован!", "Аунтификация");
                 if (user.IsDeleted ?? true)
-                    return BadRequest(new ResponseError { ErrHeader = "Аунтификация", ErrMsg = "Пользователь удален!" });
+                    throw new BadRequestException("Пользователь удален!", "Аунтификация");
 
                 var role = await Ctx.Roles.FirstOrDefaultAsync(x => x.Id == user.RoleId);
                 if (role == null)
-                    return BadRequest(new ResponseError { ErrHeader = "Аунтификация", ErrMsg = "Неизвестная роль пользователя!" });
+                    throw new BadRequestException("Неизвестная роль пользователя!", "Аунтификация");
                 if (role.IsDisabled ?? true)
-                    return BadRequest(new ResponseError { ErrHeader = "Аунтификация", ErrMsg = "Роль заблокирована!" });
+                    throw new BadRequestException("Роль заблокирована!", "Аунтификация");
                 if (role.IsDisabled ?? true)
-                    return BadRequest(new ResponseError { ErrHeader = "Аунтификация", ErrMsg = "Роль удалена!" });
+                    throw new BadRequestException("Роль удалена!", "Аунтификация");
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                    new Claim("UserId", user.Id.ToString()),
-                    //new Claim("RoleId", role.Id.ToString())
+                        new Claim("UserId", user.Id.ToString()),
+                        new Claim("RoleId", role.Id.ToString())
                     }),
                     Expires = DateTime.UtcNow.AddDays(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
@@ -89,36 +87,54 @@ namespace FarmAppServer.Controllers
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var securityToken = tokenHandler.CreateToken(tokenDescriptor);
                 var token = tokenHandler.WriteToken(securityToken);
-                return Ok(new ResponseSuccess { Id = 1, Result = token });
+                return Ok(response = new ResponseBody { Id = 1, Header = "Ok", Result = token });
             }
-            catch(BadRequestException bex)
+            catch (NotFoundException nex)
             {
-                return BadRequest(new ResponseError { ErrHeader = bex.Method, ErrMsg = bex.Message });
+                ///
+                return NotFound(new ResponseBody { Header = nex.Header, Result = nex.InnerException?.Message ?? nex.Message });
             }
-            catch(Exception ex)
+            catch (BadRequestException bex)
             {
-                return BadRequest(new ResponseError { ErrHeader = "Ошибка", ErrMsg = ex.InnerException?.Message ?? ex.Message });
+                return BadRequest(new ResponseBody { Header = bex.Header, Result = bex.InnerException?.Message ?? bex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ResponseBody { Header = "Ошибка!", Result = ex.InnerException?.Message ?? ex.Message });
+            }
+            finally
+            {
+                // Сохраняем ответ
+
             }
         }
 
-        [HttpGet]
-        //[Authorize]
-        [Route("getuser")]
-        //GET : /api/UserProfile
-        public async Task<object> GetUserProfile()
+        [Access]
+        [HttpGet, Route("getuser")]
+        public async Task<IActionResult> GetUserProfile()
         {
-            string userId = User.Claims.First(c => c.Type == "UserId").Value;
+
+            //string userId = User.Claims?.FirstOrDefault(c => c.Type == "UserId")?.Value;
+            //if (userId == null)
+            //    return Unauthorized();
+            var userId = "";
+            //string roleId = User.Claims.First(c => c.Type == "RoleId").Value;
+            //HttpContext.Items.
             var user = await Ctx.Users.FindAsync(int.Parse(userId));
-            return new
+            user.Role = await Ctx.Roles.FindAsync(user.RoleId);
+            return Ok(new
             {
                 user.UserName,
                 user.Login,
-                RoleName = user.Role?.RoleName ?? "1235df"
-            }; 
+                user.Role?.RoleName
+            });
         }
 
-        //public Task<IActionResult> GetValue()
-        //{
-        //}
+        //[Authorize]
+        [HttpGet, Route("getusers")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            return await Ctx.Users.ToListAsync();
+        }
     }
 }

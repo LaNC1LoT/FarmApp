@@ -17,6 +17,7 @@ namespace FarmApp.Infrastructure.Data.Contexts
         public virtual DbSet<RegionType> RegionTypes { get; set; }
         public virtual DbSet<Sale> Sales { get; set; }
         public virtual DbSet<Vendor> Vendors { get; set; }
+        public virtual DbSet<Log> Logs { get; set; }
 
         public FarmAppContext(DbContextOptions<FarmAppContext> options)
             : base(options)
@@ -25,6 +26,12 @@ namespace FarmApp.Infrastructure.Data.Contexts
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Log>(entity =>
+            {
+                entity.ToTable(Table.Logs, Schema.Log);
+
+            });
+
             modelBuilder.Entity<ApiMethod>(entity =>
             {
                 entity.ToTable(Table.ApiMethod, Schema.Api);

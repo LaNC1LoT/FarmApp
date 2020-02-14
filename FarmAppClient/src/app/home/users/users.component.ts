@@ -7,7 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UsersComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+    console.log('Я users создан!');
+}
 
   ngOnInit() {
   }

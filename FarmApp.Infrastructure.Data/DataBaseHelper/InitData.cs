@@ -39,9 +39,11 @@ namespace FarmApp.Infrastructure.Data.DataBaseHelper
 
         public static IEnumerable<ApiMethod> InitApiMethods
         {
-            get => new List<ApiMethod>(1)
+            get => new List<ApiMethod>(2)
             {
-                new ApiMethod{ ApiMethodName = "LoginUser", StoredProcedureName = "UserAutification"}
+                new ApiMethod{ ApiMethodName = "LoginUser", StoredProcedureName = "UserAutification", IsDisabled = false, IsDeleted = false },
+                new ApiMethod{ ApiMethodName = "GetUsers", StoredProcedureName = "GetUsers", IsDisabled = false, IsDeleted = false },
+                new ApiMethod{ ApiMethodName = "UpSertUser", StoredProcedureName = "UpSertUser", IsDisabled = false, IsDeleted = false }
             };
         }
 
