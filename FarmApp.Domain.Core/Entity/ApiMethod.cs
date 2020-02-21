@@ -8,7 +8,6 @@ namespace FarmApp.Domain.Core.Entity
     {
         public string ApiMethodName { get; set; }
         public string StoredProcedureName { get; set; }
-        public bool? IsDisabled { get; set; }
         public bool? IsDeleted { get; set; }
     }
 }

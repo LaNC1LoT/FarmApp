@@ -31,12 +31,6 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValueSql("((0))");
 
-                    b.Property<bool?>("IsDisabled")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValueSql("((0))");
-
                     b.Property<string>("StoredProcedureName")
                         .IsRequired()
                         .HasColumnType("nvarchar(350)")
@@ -51,7 +45,20 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         new
                         {
                             ApiMethodName = "LoginUser",
+                            IsDeleted = false,
                             StoredProcedureName = "UserAutification"
+                        },
+                        new
+                        {
+                            ApiMethodName = "GetUsers",
+                            IsDeleted = false,
+                            StoredProcedureName = "GetUsers"
+                        },
+                        new
+                        {
+                            ApiMethodName = "UpSertUser",
+                            IsDeleted = false,
+                            StoredProcedureName = "UpSertUser"
                         });
                 });
 
@@ -125,6 +132,65 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     b.HasIndex("VendorId");
 
                     b.ToTable("Drugs","tab");
+                });
+
+            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Log", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Exception")
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(8000);
+
+                    b.Property<DateTime?>("FactTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Header")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MapRoute")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Method")
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
+                    b.Property<string>("Param")
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(8000);
+
+                    b.Property<DateTime?>("RequestTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("ResponseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("ResponseTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Result")
+                        .HasColumnType("nvarchar(max)")
+                        .HasMaxLength(8000);
+
+                    b.Property<int?>("RoleId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("StatusCode")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("nvarchar(255)")
+                        .HasMaxLength(255);
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Logs","log");
                 });
 
             modelBuilder.Entity("FarmApp.Domain.Core.Entity.Pharmacy", b =>

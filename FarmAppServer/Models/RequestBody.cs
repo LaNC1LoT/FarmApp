@@ -2,10 +2,10 @@
 
 namespace FarmAppServer.Models
 {
-    public class RequestBody
+    public class RequestBody<T> where T : class
     {
-        public string Method { get; set; }
+        public string MapRoute { get; set; }
         public DateTime? RequestTime { get; set; }
-        public string Param { get; set; }
+        public T Param { get; set; }
     }
 }

@@ -41,9 +41,9 @@ namespace FarmApp.Infrastructure.Data.DataBaseHelper
         {
             get => new List<ApiMethod>(2)
             {
-                new ApiMethod{ ApiMethodName = "LoginUser", StoredProcedureName = "UserAutification", IsDisabled = false, IsDeleted = false },
-                new ApiMethod{ ApiMethodName = "GetUsers", StoredProcedureName = "GetUsers", IsDisabled = false, IsDeleted = false },
-                new ApiMethod{ ApiMethodName = "UpSertUser", StoredProcedureName = "UpSertUser", IsDisabled = false, IsDeleted = false }
+                new ApiMethod{ ApiMethodName = "LoginUser", StoredProcedureName = "UserAutification", IsDeleted = false },
+                new ApiMethod{ ApiMethodName = "GetUsers", StoredProcedureName = "GetUsers", IsDeleted = false },
+                new ApiMethod{ ApiMethodName = "UpSertUser", StoredProcedureName = "UpSertUser", IsDeleted = false }
             };
         }
 

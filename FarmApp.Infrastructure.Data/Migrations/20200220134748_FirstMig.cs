@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FarmApp.Infrastructure.Data.Migrations
 {
-    public partial class NewDb : Migration
+    public partial class FirstMig : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,6 +16,9 @@ namespace FarmApp.Infrastructure.Data.Migrations
             migrationBuilder.EnsureSchema(
                 name: "tab");
 
+            migrationBuilder.EnsureSchema(
+                name: "log");
+
             migrationBuilder.CreateTable(
                 name: "ApiMethods",
                 schema: "api",
@@ -23,7 +26,6 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 {
                     ApiMethodName = table.Column<string>(maxLength: 255, nullable: false),
                     StoredProcedureName = table.Column<string>(maxLength: 350, nullable: false),
-                    IsDisabled = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
                     IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
                 },
                 constraints: table =>
@@ -101,6 +103,33 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vendors", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Logs",
+                schema: "log",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(nullable: true),
+                    RoleId = table.Column<int>(nullable: true),
+                    MapRoute = table.Column<string>(nullable: true),
+                    Url = table.Column<string>(maxLength: 255, nullable: true),
+                    Method = table.Column<string>(maxLength: 255, nullable: true),
+                    RequestTime = table.Column<DateTime>(nullable: true),
+                    FactTime = table.Column<DateTime>(nullable: true),
+                    Param = table.Column<string>(maxLength: 8000, nullable: true),
+                    StatusCode = table.Column<int>(nullable: true),
+                    ResponseId = table.Column<Guid>(nullable: true),
+                    ResponseTime = table.Column<DateTime>(nullable: true),
+                    Header = table.Column<string>(nullable: true),
+                    Result = table.Column<string>(maxLength: 8000, nullable: true),
+                    Exception = table.Column<string>(maxLength: 8000, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Logs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -265,8 +294,13 @@ namespace FarmApp.Infrastructure.Data.Migrations
             migrationBuilder.InsertData(
                 schema: "api",
                 table: "ApiMethods",
-                columns: new[] { "ApiMethodName", "StoredProcedureName" },
-                values: new object[] { "LoginUser", "UserAutification" });
+                columns: new[] { "ApiMethodName", "IsDeleted", "StoredProcedureName" },
+                values: new object[,]
+                {
+                    { "LoginUser", false, "UserAutification" },
+                    { "GetUsers", false, "GetUsers" },
+                    { "UpSertUser", false, "UpSertUser" }
+                });
 
             migrationBuilder.InsertData(
                 schema: "dist",
@@ -373,6 +407,10 @@ namespace FarmApp.Infrastructure.Data.Migrations
             migrationBuilder.DropTable(
                 name: "Users",
                 schema: "dist");
+
+            migrationBuilder.DropTable(
+                name: "Logs",
+                schema: "log");
 
             migrationBuilder.DropTable(
                 name: "Sales",

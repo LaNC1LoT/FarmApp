@@ -1,4 +1,5 @@
 ﻿using FarmApp.Infrastructure.Data.Contexts;
+using FarmAppServer.Extantions;
 using FarmAppServer.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -56,6 +57,8 @@ namespace FarmAppServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -64,23 +67,26 @@ namespace FarmAppServer
             app.UseStaticFiles();
             app.UseRouting();
             app.UseAuthentication();
-            //app.UseAuthorization();
-
-            app.Use(async (ctx, next) =>
-            {
-                await next();
-                if (ctx.Response.StatusCode == 204)
-                {
-                    ctx.Response.ContentLength = 0;
-                }
-            });
 
             app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString()).AllowAnyHeader().AllowAnyMethod());
+
+
+            //app.Use(async (ctx, next) =>
+            //{
+            //    await next();
+            //    if (ctx.Response.StatusCode == 204)
+            //    {
+            //        ctx.Response.ContentLength = 0;
+            //    }
+            //});
+            app.UseMiddleware<ErrorHandlingMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+        
 
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<FarmAppContext>();

@@ -24,14 +24,14 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    this.service.getUser().subscribe(
-      (res: User) => {
-        this.user = res;
-      },
-      err => {
-        console.log(err);
-      },
-    );
+    // this.service.getUser().subscribe(
+    //   (res: User) => {
+    //     this.user = res;
+    //   },
+    //   err => {
+    //     console.log(err);
+    //   },
+    // );
   }
 
   onLogout() {

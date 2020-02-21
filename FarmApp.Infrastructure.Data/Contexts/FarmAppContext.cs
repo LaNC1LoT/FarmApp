@@ -29,7 +29,11 @@ namespace FarmApp.Infrastructure.Data.Contexts
             modelBuilder.Entity<Log>(entity =>
             {
                 entity.ToTable(Table.Logs, Schema.Log);
-
+                entity.Property(p => p.Method).HasMaxLength(255);
+                entity.Property(p => p.Url).HasMaxLength(255);
+                entity.Property(p => p.Param).HasMaxLength(8000);
+                entity.Property(p => p.Result).HasMaxLength(8000);
+                entity.Property(p => p.Exception).HasMaxLength(8000);
             });
 
             modelBuilder.Entity<ApiMethod>(entity =>
@@ -38,7 +42,7 @@ namespace FarmApp.Infrastructure.Data.Contexts
                 entity.HasKey(h => h.ApiMethodName).IsClustered();
                 entity.Property(p => p.ApiMethodName).IsRequired().HasMaxLength(255);
                 entity.Property(p => p.StoredProcedureName).IsRequired().HasMaxLength(350);
-                entity.Property(p => p.IsDisabled).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
+                //entity.Property(p => p.IsDisabled).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
                 entity.Property(p => p.IsDeleted).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
                 entity.HasData(InitData.InitApiMethods);
             });
