@@ -1,6 +1,9 @@
-﻿using FarmApp.Infrastructure.Data.Contexts;
+﻿using FarmApp.Domain.Core.Entity;
+using FarmApp.Infrastructure.Data.Contexts;
 using FarmAppServer.Extantions;
+using FarmAppServer.Middlewares;
 using FarmAppServer.Models;
+using FarmAppServer.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,6 +33,12 @@ namespace FarmAppServer
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
             string connection = Configuration.GetConnectionString("FarmAppContext");
             services.AddDbContext<FarmAppContext>(options => options.UseSqlServer(connection));
+
+            services.AddTransient<IValidation, Validation>();
+            services.AddTransient<IAuthenticationUser, AuthenticationUser>();
+
+            services.AddScoped<ICustomLogger, CustomLogger>();
+
             services.AddControllers();
 
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
@@ -57,8 +66,6 @@ namespace FarmAppServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -66,27 +73,18 @@ namespace FarmAppServer
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
-            app.UseAuthentication();
 
             app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString()).AllowAnyHeader().AllowAnyMethod());
 
-
-            //app.Use(async (ctx, next) =>
-            //{
-            //    await next();
-            //    if (ctx.Response.StatusCode == 204)
-            //    {
-            //        ctx.Response.ContentLength = 0;
-            //    }
-            //});
             app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<ValidationMiddleware>();
+            app.UseMiddleware<AuthenticationMiddleware>();
+            
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
-
-        
 
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
             var context = serviceScope.ServiceProvider.GetRequiredService<FarmAppContext>();

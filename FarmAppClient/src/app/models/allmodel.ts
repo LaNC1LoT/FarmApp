@@ -17,9 +17,9 @@ export class Role {
 }
 
 export class RequestBody {
-    public mapRoute: string;
+    public methodRoute: string;
     public requestTime: any = new Date(); // .getDate();
-    public param: User;
+    public param: string;
 }
 
 export class ResponseSuccess {

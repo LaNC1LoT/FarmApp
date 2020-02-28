@@ -30,37 +30,31 @@ namespace FarmAppServer.Controllers
         }
 
         [HttpPost, Route("GetToken")]
-        public async Task<IActionResult> Auntification<T>([FromBody]RequestBody<User> requestBody) where T : class
+        public async Task<IActionResult> Auntification([FromBody]RequestBody requestBody)
         {
-            //var user = JsonConvert.DeserializeObject<User>(requestBody.Param);
-            var user = requestBody.Param;
+            var user = JsonConvert.DeserializeObject<User>(requestBody.Param);
             user = await Ctx.Users.FirstOrDefaultAsync(x => x.Login == user.Login && x.Password == user.Password);
    
             if (user == null)
                 return NotFound(new ResponseBody { Result = "Неверный логин или пароль!", Header = "Аунтификация" });
-            if (user.IsDisabled ?? true)
-                return BadRequest(new ResponseBody { Result = "Пользователь заблокирован!", Header = "Аунтификация" });
+
             if (user.IsDeleted ?? true)
                 //return BadRequest(new ResponseBody { Result = "Пользователь удален!", Header = "Аунтификация" });
-            throw new BadRequestException("asd", "asd");
+                throw new BadRequestException("asd", "asd");
 
             var role = await Ctx.Roles.FirstOrDefaultAsync(x => x.Id == user.RoleId);
             if (role == null)
                 throw new BadRequestException("Неизвестная роль пользователя!", "Аунтификация");
-            if (role.IsDisabled ?? true)
-                throw new BadRequestException("Роль заблокирована!", "Аунтификация");
-            if (role.IsDisabled ?? true)
-                throw new BadRequestException("Роль удалена!", "Аунтификация");
 
-            //log.UserId = user?.Id;
-            //log.RoleId = user?.RoleId;
+            if (role.IsDeleted ?? true)
+                throw new BadRequestException("Роль удалена!", "Аунтификация");
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                        new Claim("UserId", user.Id.ToString()),
-                        new Claim("RoleId", role.Id.ToString())
+                    new Claim("UserId", user.Id.ToString()),
+                    new Claim("RoleId", role.Id.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
@@ -71,11 +65,12 @@ namespace FarmAppServer.Controllers
             return Ok(new ResponseBody { Header = "Ok", Result = token });
         }
 
-        [Access]
+        //[Access]
         [HttpGet, Route("getuser")]
         public async Task<IActionResult> GetUserProfile()
         {
-            var userId = "";
+            
+            var userId = "1";
             //string roleId = User.Claims.First(c => c.Type == "RoleId").Value;
             //HttpContext.Items.
             var user = await Ctx.Users.FindAsync(int.Parse(userId));

@@ -12,11 +12,13 @@ namespace FarmApp.Domain.Core.Entity
         public Role()
         {
             Users = new HashSet<User>();
+            ApiMethodRoles = new HashSet<ApiMethodRole>();
         }
+
         public int Id { get; set; }
         public string RoleName { get; set; }
-        public bool? IsDisabled { get; set; }
         public bool? IsDeleted { get; set; }
         public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<ApiMethodRole> ApiMethodRoles { get; set; }
     }
 }

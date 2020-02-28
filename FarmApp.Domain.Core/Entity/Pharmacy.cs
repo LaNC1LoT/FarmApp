@@ -28,7 +28,6 @@ namespace FarmApp.Domain.Core.Entity
         /// Сеть или нет
         /// </summary>
         public bool? IsNetwork { get; set; }
-        public bool? IsDisabled { get; set; }
         public bool? IsDeleted { get; set; }
         public virtual Pharmacy ParentPharmacy { get; set; }
         public virtual Region Region { get; set; }

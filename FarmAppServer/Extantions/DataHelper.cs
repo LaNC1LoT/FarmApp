@@ -10,64 +10,25 @@ namespace FarmAppServer.Extantions
 {
     public static class DataHelper
     {
-        public static Stream ReadStreamToEnd(this Stream stream, out string data, Stream baseStream = null)
-        {
-            data = null;
-            Stream result = null;
-            if (stream.CanRead)
-            {
-                using (AutoResetEvent reset = new AutoResetEvent(false))
-                {
-                    if (baseStream == null)
-                    {
-                        result = new MemoryStream();
-                        Task.Run(() =>
-                        {
-                            if (stream.CanSeek)
-                                stream.Seek(0, SeekOrigin.Begin);
-                            stream.CopyToAsync(result);
-                            reset.Set();
-                        });
-                        reset.WaitOne();
-                        stream.Dispose();
-                    }
-                    else
-                    {
-                        result = stream;
-                    }
-
-                    result.Seek(0, SeekOrigin.Begin);
-                    var reader = new StreamReader(result);
-                    string temp = reader.ReadToEnd();
-                    result.Seek(0, SeekOrigin.Begin);
-                    data = temp;
-
-                    if (baseStream != null)
-                    {
-                        Task.Run(() =>
-                        {
-                            byte[] buffer = Encoding.UTF8.GetBytes(temp);
-                            baseStream.WriteAsync(buffer, 0, buffer.Length);
-                            reset.Set();
-                        });
-                        reset.WaitOne();
-                        result.Dispose();
-                        result = baseStream;
-                    }
-                }
-            }
-            return result;
-        }
-
-        public static bool TryParseJson<T>(this string @this, out T result)
+        public static bool TryParseJson<T>(this string @this, out T result, out string errorMsg)
         {
             bool success = true;
+            errorMsg = string.Empty;
+            var exception = string.Empty;
+
             var settings = new JsonSerializerSettings
             {
-                Error = (sender, args) => { success = false; args.ErrorContext.Handled = true; },
+                Error = (sender, args) =>
+                {
+                    success = false;
+                    args.ErrorContext.Handled = true;
+                    exception = args.ErrorContext.Error.InnerException?.Message ?? args.ErrorContext.Error.Message;
+                },
                 MissingMemberHandling = MissingMemberHandling.Error
             };
+            
             result = JsonConvert.DeserializeObject<T>(@this, settings);
+            errorMsg = exception;
             return success;
         }
 

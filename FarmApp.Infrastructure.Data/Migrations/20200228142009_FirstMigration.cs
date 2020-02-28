@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FarmApp.Infrastructure.Data.Migrations
 {
-    public partial class FirstMig : Migration
+    public partial class FirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,14 +24,19 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 schema: "api",
                 columns: table => new
                 {
-                    ApiMethodName = table.Column<string>(maxLength: 255, nullable: false),
-                    StoredProcedureName = table.Column<string>(maxLength: 350, nullable: false),
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApiMethodName = table.Column<string>(maxLength: 350, nullable: false),
+                    StoredProcedureName = table.Column<string>(maxLength: 350, nullable: true),
+                    PathUrl = table.Column<string>(maxLength: 350, nullable: false),
+                    HttpMethod = table.Column<string>(maxLength: 350, nullable: false),
+                    IsNotNullParam = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
+                    IsNeedAuthentication = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
                     IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ApiMethods", x => x.ApiMethodName)
-                        .Annotation("SqlServer:Clustered", true);
+                    table.PrimaryKey("PK_ApiMethods", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -81,7 +86,6 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoleName = table.Column<string>(maxLength: 50, nullable: false),
-                    IsDisabled = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
                     IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
                 },
                 constraints: table =>
@@ -112,20 +116,20 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<int>(nullable: true),
-                    RoleId = table.Column<int>(nullable: true),
-                    MapRoute = table.Column<string>(nullable: true),
-                    Url = table.Column<string>(maxLength: 255, nullable: true),
-                    Method = table.Column<string>(maxLength: 255, nullable: true),
+                    UserId = table.Column<string>(maxLength: 255, nullable: true),
+                    RoleId = table.Column<string>(maxLength: 255, nullable: true),
+                    HttpMethod = table.Column<string>(maxLength: 255, nullable: true),
+                    PathUrl = table.Column<string>(maxLength: 255, nullable: true),
+                    MethodRoute = table.Column<string>(maxLength: 255, nullable: true),
                     RequestTime = table.Column<DateTime>(nullable: true),
                     FactTime = table.Column<DateTime>(nullable: true),
-                    Param = table.Column<string>(maxLength: 8000, nullable: true),
+                    Param = table.Column<string>(maxLength: 4000, nullable: true),
                     StatusCode = table.Column<int>(nullable: true),
                     ResponseId = table.Column<Guid>(nullable: true),
                     ResponseTime = table.Column<DateTime>(nullable: true),
                     Header = table.Column<string>(nullable: true),
-                    Result = table.Column<string>(maxLength: 8000, nullable: true),
-                    Exception = table.Column<string>(maxLength: 8000, nullable: true)
+                    Result = table.Column<string>(maxLength: 4000, nullable: true),
+                    Exception = table.Column<string>(maxLength: 4000, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -165,6 +169,36 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ApiMethodRoles",
+                schema: "api",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ApiMethodId = table.Column<int>(nullable: false),
+                    RoleId = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ApiMethodRoles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ApiMethodRoles_ApiMethods_ApiMethodId",
+                        column: x => x.ApiMethodId,
+                        principalSchema: "api",
+                        principalTable: "ApiMethods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ApiMethodRoles_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalSchema: "dist",
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 schema: "dist",
                 columns: table => new
@@ -175,7 +209,6 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     Password = table.Column<string>(maxLength: 20, nullable: false),
                     UserName = table.Column<string>(maxLength: 255, nullable: false),
                     RoleId = table.Column<int>(nullable: false),
-                    IsDisabled = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
                     IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
                 },
                 constraints: table =>
@@ -235,7 +268,6 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     IsMode = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
                     IsType = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
                     IsNetwork = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
-                    IsDisabled = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
                     IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
                 },
                 constraints: table =>
@@ -294,12 +326,11 @@ namespace FarmApp.Infrastructure.Data.Migrations
             migrationBuilder.InsertData(
                 schema: "api",
                 table: "ApiMethods",
-                columns: new[] { "ApiMethodName", "IsDeleted", "StoredProcedureName" },
+                columns: new[] { "Id", "ApiMethodName", "HttpMethod", "IsDeleted", "IsNeedAuthentication", "IsNotNullParam", "PathUrl", "StoredProcedureName" },
                 values: new object[,]
                 {
-                    { "LoginUser", false, "UserAutification" },
-                    { "GetUsers", false, "GetUsers" },
-                    { "UpSertUser", false, "UpSertUser" }
+                    { 1, "GetToken", "POST", false, false, true, "/GetToken", null },
+                    { 2, "GetUser", "GET", false, true, false, "/GetUser", null }
                 });
 
             migrationBuilder.InsertData(
@@ -326,16 +357,44 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                schema: "dist",
-                table: "Users",
-                columns: new[] { "Id", "Login", "Password", "RoleId", "UserName" },
-                values: new object[] { 1, "admin", "123456", 1, "Админ" });
+                schema: "api",
+                table: "ApiMethodRoles",
+                columns: new[] { "Id", "ApiMethodId", "IsDeleted", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, 1, false, 1 },
+                    { 3, 2, false, 1 },
+                    { 2, 1, false, 2 }
+                });
 
             migrationBuilder.InsertData(
                 schema: "dist",
                 table: "Users",
                 columns: new[] { "Id", "Login", "Password", "RoleId", "UserName" },
-                values: new object[] { 2, "user", "123456", 2, "Пользователь" });
+                values: new object[,]
+                {
+                    { 1, "admin", "123456", 1, "Админ" },
+                    { 2, "user", "123456", 2, "Пользователь" }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApiMethodRoles_ApiMethodId",
+                schema: "api",
+                table: "ApiMethodRoles",
+                column: "ApiMethodId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApiMethodRoles_RoleId",
+                schema: "api",
+                table: "ApiMethodRoles",
+                column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ApiMethods_ApiMethodName",
+                schema: "api",
+                table: "ApiMethods",
+                column: "ApiMethodName",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_CodeAthTypes_CodeAthId",
@@ -401,7 +460,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ApiMethods",
+                name: "ApiMethodRoles",
                 schema: "api");
 
             migrationBuilder.DropTable(
@@ -415,6 +474,10 @@ namespace FarmApp.Infrastructure.Data.Migrations
             migrationBuilder.DropTable(
                 name: "Sales",
                 schema: "tab");
+
+            migrationBuilder.DropTable(
+                name: "ApiMethods",
+                schema: "api");
 
             migrationBuilder.DropTable(
                 name: "Roles",

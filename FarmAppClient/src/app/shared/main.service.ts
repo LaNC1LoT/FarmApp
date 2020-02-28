@@ -16,14 +16,14 @@ export class MainService {
   constructor(private http: HttpClient, private router: Router, private toast: ToastrService) { }
 
   @BlockUI() blockUI: NgBlockUI;
-  private getToken = 'http://localhost:5000/gettoken1';
+  private getToken = 'http://localhost:5000/gettoken';
 
 
   loginUser(user: User) {
     this.blockUI.start('Авторизация...');
     const login: RequestBody  = new RequestBody();
-    login.mapRoute = 'LoginUser';
-    login.param = user; // JSON.stringify(user);
+    login.methodRoute = 'GetToken';
+    login.param = JSON.stringify(user);
     console.log(login);
     return this.http.post(this.getToken, login, { observe: 'response' })
       .pipe(
@@ -32,15 +32,14 @@ export class MainService {
           this.blockUI.stop();
         })).subscribe(
           (res: HttpResponse<ResponseSuccess>) => {
+            console.log(res);
             localStorage.setItem('token', res.body.result);
             this.router.navigateByUrl('/home');
             this.toast.success('Успешно', 'Аутентификация');
           },
           (err: HttpErrorResponse) => {
             console.log(err);
-            if (err.status === 400 || err.status === 404) {
-              this.toast.error(err.error.result, err.error.header);
-            } else if ( err.status === 500) {
+            if (err.status === 400 || err.status === 404 || err.status === 500) {
               this.toast.error(err.error.Result, err.error.Header);
             } else if (err.status === 0) {
               this.toast.error('Сервер недоступен!', 'Аутентификация');
