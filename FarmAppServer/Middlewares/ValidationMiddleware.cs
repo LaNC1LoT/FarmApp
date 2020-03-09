@@ -2,6 +2,7 @@
 using FarmAppServer.Models;
 using FarmAppServer.Services;
 using Microsoft.AspNetCore.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace FarmAppServer.Middlewares
@@ -25,7 +26,7 @@ namespace FarmAppServer.Middlewares
             {
                 context.Response.StatusCode = logger.Log.StatusCode.Value;
                 context.Response.ContentType = "application/json; charset=utf-8";
-                await context.Response.WriteAsync(logger.ResponseBody.ToString());
+                await context.Response.WriteAsync(logger.ResponseBody.ToString(), Encoding.UTF8);
             }
         }
     }

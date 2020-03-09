@@ -27,8 +27,10 @@ namespace FarmAppServer.Middlewares
             var originalBody = context.Response.Body;
             var responseBody = new MemoryStream();
             context.Response.Body = responseBody;
+            
             try
             {
+                var entd = context.GetEndpoint();
                 await _next.Invoke(context);
             }
             catch (Exception ex)

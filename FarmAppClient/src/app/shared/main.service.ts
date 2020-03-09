@@ -39,19 +39,13 @@ export class MainService {
           },
           (err: HttpErrorResponse) => {
             console.log(err);
-            const response = JSON.parse(err.error, this.replacer);
-            const responseError: ResponseBody = response as ResponseBody;
-            console.log(response);
-            if (responseError === null) {
+            if (err === null || err.status === 0) {
               this.toast.error('Сервер недоступен!', 'Ошибка!');
             } else {
               if (err.status === 400 || err.status === 404 || err.status === 500) {
-                // this.toast.error(err.error.Result, err.error.Header);
-                this.toast.error(responseError.result, responseError.header);
-              } else if (err.status === 0) {
-                this.toast.error('Сервер недоступен!', 'Аутентификация');
+                this.toast.error(err.error.result, err.error.header);
               } else if (err.statusText === 'TimeoutError' ) {
-                this.toast.error('Превышен лимит ожидания!', 'Аутентификация');
+                this.toast.error('Превышен лимит ожидания ответа от сервера!', 'Ошибка!');
               } else {
                 console.log(err);
               }
@@ -70,6 +64,8 @@ export class MainService {
 
 
   replacer(key: any, value: string) {
+    key.value = key.value[0].toLowerCase();
+    console.log(key);
     if (typeof key === 'string') {
       return value.toUpperCase();
     }
