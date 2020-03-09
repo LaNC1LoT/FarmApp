@@ -1,9 +1,6 @@
 ﻿using FarmApp.Domain.Core.Entity;
 using FarmApp.Infrastructure.Data.Contexts;
-using FarmAppServer.Exceptions;
-using FarmAppServer.Extantions;
 using FarmAppServer.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -36,18 +33,18 @@ namespace FarmAppServer.Controllers
             user = await Ctx.Users.FirstOrDefaultAsync(x => x.Login == user.Login && x.Password == user.Password);
    
             if (user == null)
-                return NotFound(new ResponseBody { Result = "Неверный логин или пароль!", Header = "Аунтификация" });
+                return NotFound(new ResponseBody { Header = "Аунтификация", Result = "Неверный логин или пароль!"});
 
             if (user.IsDeleted ?? true)
-                //return BadRequest(new ResponseBody { Result = "Пользователь удален!", Header = "Аунтификация" });
-                throw new BadRequestException("asd", "asd");
+                return BadRequest(new ResponseBody { Result = "Пользователь заблокирован!", Header = "Аунтификация" });
+            //throw new Exception("сука");
 
             var role = await Ctx.Roles.FirstOrDefaultAsync(x => x.Id == user.RoleId);
             if (role == null)
-                throw new BadRequestException("Неизвестная роль пользователя!", "Аунтификация");
+                return NotFound(new ResponseBody { Header = "Аунтификация", Result = "Неизвестная роль пользователя!" });
 
             if (role.IsDeleted ?? true)
-                throw new BadRequestException("Роль удалена!", "Аунтификация");
+                return BadRequest(new ResponseBody { Header = "Аунтификация", Result = "Роль удалена!" });
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

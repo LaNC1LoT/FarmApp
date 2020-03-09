@@ -22,7 +22,9 @@ export class RequestBody {
     public param: string;
 }
 
-export class ResponseSuccess {
-    public id: number;
-    public result: string;
+export interface ResponseBody {
+    id: string;
+    responseTime: Date;
+    header: string;
+    result: string;
 }

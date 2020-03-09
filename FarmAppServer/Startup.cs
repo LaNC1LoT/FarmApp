@@ -1,6 +1,4 @@
-﻿using FarmApp.Domain.Core.Entity;
-using FarmApp.Infrastructure.Data.Contexts;
-using FarmAppServer.Extantions;
+﻿using FarmApp.Infrastructure.Data.Contexts;
 using FarmAppServer.Middlewares;
 using FarmAppServer.Models;
 using FarmAppServer.Services;
@@ -35,7 +33,6 @@ namespace FarmAppServer
             services.AddDbContext<FarmAppContext>(options => options.UseSqlServer(connection));
 
             services.AddTransient<IValidation, Validation>();
-            services.AddTransient<IAuthenticationUser, AuthenticationUser>();
 
             services.AddScoped<ICustomLogger, CustomLogger>();
 
@@ -70,16 +67,16 @@ namespace FarmAppServer
             {
                 app.UseDeveloperExceptionPage();
             }
+
             app.UseDefaultFiles();
             app.UseStaticFiles();
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString()).AllowAnyHeader().AllowAnyMethod());
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
-            app.UseMiddleware<ValidationMiddleware>();
-            app.UseMiddleware<AuthenticationMiddleware>();
-            
+            app.UseMiddleware<ValidationMiddleware>();      
 
             app.UseEndpoints(endpoints =>
             {

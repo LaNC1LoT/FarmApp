@@ -18,11 +18,13 @@ namespace FarmAppServer.Middlewares
         public async Task Invoke(HttpContext context, IValidation validation, ICustomLogger logger)
         {
             if (await validation.IsValidationAsync(context, logger))
+            {
                 await _next.Invoke(context);
+            }
             else
             {
-                context.Response.StatusCode = logger.Log.StatusCode ?? 0;
-                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = logger.Log.StatusCode.Value;
+                context.Response.ContentType = "application/json; charset=utf-8";
                 await context.Response.WriteAsync(logger.ResponseBody.ToString());
             }
         }

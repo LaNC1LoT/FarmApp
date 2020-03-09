@@ -1,7 +1,5 @@
-﻿using FarmApp.Domain.Core.Entity;
-using FarmAppServer.Models;
+﻿using FarmAppServer.Models;
 using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FarmAppServer.Services

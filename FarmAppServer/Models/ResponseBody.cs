@@ -1,10 +1,9 @@
-﻿using FarmAppServer.Exceptions;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 
 namespace FarmAppServer.Models
 {
-    public class ResponseBody: IResult
+    public class ResponseBody
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public DateTime ResponseTime { get; set; } = DateTime.Now;

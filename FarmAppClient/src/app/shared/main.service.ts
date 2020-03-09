@@ -1,7 +1,7 @@
-import { User } from './../models/allmodel';
+import { User, ResponseBody } from './../models/allmodel';
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-import { RequestBody, ResponseSuccess } from '../models/allmodel';
+import { RequestBody } from '../models/allmodel';
 import { timeout, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -31,7 +31,7 @@ export class MainService {
         finalize(() => {
           this.blockUI.stop();
         })).subscribe(
-          (res: HttpResponse<ResponseSuccess>) => {
+          (res: HttpResponse<ResponseBody>) => {
             console.log(res);
             localStorage.setItem('token', res.body.result);
             this.router.navigateByUrl('/home');
@@ -39,14 +39,22 @@ export class MainService {
           },
           (err: HttpErrorResponse) => {
             console.log(err);
-            if (err.status === 400 || err.status === 404 || err.status === 500) {
-              this.toast.error(err.error.Result, err.error.Header);
-            } else if (err.status === 0) {
-              this.toast.error('Сервер недоступен!', 'Аутентификация');
-            } else if (err.statusText === 'TimeoutError' ) {
-              this.toast.error('Превышен лимит ожидания!', 'Аутентификация');
+            const response = JSON.parse(err.error, this.replacer);
+            const responseError: ResponseBody = response as ResponseBody;
+            console.log(response);
+            if (responseError === null) {
+              this.toast.error('Сервер недоступен!', 'Ошибка!');
             } else {
-              console.log(err);
+              if (err.status === 400 || err.status === 404 || err.status === 500) {
+                // this.toast.error(err.error.Result, err.error.Header);
+                this.toast.error(responseError.result, responseError.header);
+              } else if (err.status === 0) {
+                this.toast.error('Сервер недоступен!', 'Аутентификация');
+              } else if (err.statusText === 'TimeoutError' ) {
+                this.toast.error('Превышен лимит ожидания!', 'Аутентификация');
+              } else {
+                console.log(err);
+              }
             }
           }
         );
@@ -60,6 +68,13 @@ export class MainService {
     return this.http.get('http://localhost:5000/getusers');
   }
 
+
+  replacer(key: any, value: string) {
+    if (typeof key === 'string') {
+      return value.toUpperCase();
+    }
+    return value;
+  }
 
   // getUsers() {
   //   return this.http.get(this.url);
