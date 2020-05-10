@@ -7,9 +7,9 @@ namespace FarmApp.Infrastructure.Data.DataBaseHelper
     internal class Table
     {
         public const string User = "Users";
-        public const string Role = "Roles";
+        public const string RoleType = "RoleTypes";
         public const string Drug = "Drugs";
-        public const string CodeAthType = "CodeAthTypes";
+        public const string CodeAth = "CodeAths";
         public const string Vendor = "Vendors";
         public const string Pharmacy = "Pharmacies";
         public const string Region = "Regions";

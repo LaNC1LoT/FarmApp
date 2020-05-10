@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FarmApp.Domain.Core.Interfaces;
+using System;
 
 namespace FarmApp.Domain.Core.Entity
 {
-    public class Sale
+    public class Sale : IEntity
     {
         public long Id { get; set; }
         public int DrugId { get; set; }

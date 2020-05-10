@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FarmApp.Infrastructure.Data.Migrations
 {
-    public partial class FirstMigration : Migration
+    public partial class MigrateDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -40,7 +40,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CodeAthTypes",
+                name: "CodeAths",
                 schema: "dist",
                 columns: table => new
                 {
@@ -53,12 +53,12 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CodeAthTypes", x => x.Id);
+                    table.PrimaryKey("PK_CodeAths", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CodeAthTypes_CodeAthTypes_CodeAthId",
+                        name: "FK_CodeAths_CodeAths_CodeAthId",
                         column: x => x.CodeAthId,
                         principalSchema: "dist",
-                        principalTable: "CodeAthTypes",
+                        principalTable: "CodeAths",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -70,7 +70,8 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RegionTypeName = table.Column<string>(maxLength: 255, nullable: false),
+                    EnumName = table.Column<string>(maxLength: 50, nullable: false),
+                    Description = table.Column<string>(maxLength: 50, nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
                 },
                 constraints: table =>
@@ -79,18 +80,19 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Roles",
+                name: "RoleTypes",
                 schema: "dist",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleName = table.Column<string>(maxLength: 50, nullable: false),
+                    EnumName = table.Column<string>(maxLength: 50, nullable: false),
+                    Description = table.Column<string>(maxLength: 50, nullable: false),
                     IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.Id);
+                    table.PrimaryKey("PK_RoleTypes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,18 +118,20 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    UserId = table.Column<string>(maxLength: 255, nullable: true),
-                    RoleId = table.Column<string>(maxLength: 255, nullable: true),
+                    UserId = table.Column<string>(maxLength: 50, nullable: true),
+                    RoleId = table.Column<string>(maxLength: 50, nullable: true),
                     HttpMethod = table.Column<string>(maxLength: 255, nullable: true),
                     PathUrl = table.Column<string>(maxLength: 255, nullable: true),
                     MethodRoute = table.Column<string>(maxLength: 255, nullable: true),
+                    HeaderRequest = table.Column<string>(maxLength: 4000, nullable: true),
                     RequestTime = table.Column<DateTime>(nullable: true),
                     FactTime = table.Column<DateTime>(nullable: true),
                     Param = table.Column<string>(maxLength: 4000, nullable: true),
                     StatusCode = table.Column<int>(nullable: true),
+                    HeaderResponse = table.Column<string>(maxLength: 4000, nullable: true),
                     ResponseId = table.Column<Guid>(nullable: true),
                     ResponseTime = table.Column<DateTime>(nullable: true),
-                    Header = table.Column<string>(nullable: true),
+                    Header = table.Column<string>(maxLength: 255, nullable: true),
                     Result = table.Column<string>(maxLength: 4000, nullable: true),
                     Exception = table.Column<string>(maxLength: 4000, nullable: true)
                 },
@@ -177,7 +181,8 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ApiMethodId = table.Column<int>(nullable: false),
                     RoleId = table.Column<int>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
+                    RoleTypeId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -190,10 +195,10 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ApiMethodRoles_Roles_RoleId",
-                        column: x => x.RoleId,
+                        name: "FK_ApiMethodRoles_RoleTypes_RoleTypeId",
+                        column: x => x.RoleTypeId,
                         principalSchema: "dist",
-                        principalTable: "Roles",
+                        principalTable: "RoleTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -209,16 +214,17 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     Password = table.Column<string>(maxLength: 20, nullable: false),
                     UserName = table.Column<string>(maxLength: 255, nullable: false),
                     RoleId = table.Column<int>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
+                    RoleTypeId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Users_Roles_RoleId",
-                        column: x => x.RoleId,
+                        name: "FK_Users_RoleTypes_RoleTypeId",
+                        column: x => x.RoleTypeId,
                         principalSchema: "dist",
-                        principalTable: "Roles",
+                        principalTable: "RoleTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -234,16 +240,17 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     CodeAthTypeId = table.Column<int>(nullable: false),
                     VendorId = table.Column<int>(nullable: false),
                     IsGeneric = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
-                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
+                    CodeAthId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Drugs", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Drugs_CodeAthTypes_CodeAthTypeId",
-                        column: x => x.CodeAthTypeId,
+                        name: "FK_Drugs_CodeAths_CodeAthId",
+                        column: x => x.CodeAthId,
                         principalSchema: "dist",
-                        principalTable: "CodeAthTypes",
+                        principalTable: "CodeAths",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -336,46 +343,54 @@ namespace FarmApp.Infrastructure.Data.Migrations
             migrationBuilder.InsertData(
                 schema: "dist",
                 table: "RegionTypes",
-                columns: new[] { "Id", "RegionTypeName" },
+                columns: new[] { "Id", "Description", "EnumName", "IsDeleted" },
                 values: new object[,]
                 {
-                    { 1, "Государство" },
-                    { 2, "Субъект(регион)" },
-                    { 3, "Город" },
-                    { 4, "Сёла, деревни и др." },
-                    { 5, "Микрорайон" }
+                    { 1, "Страна", "County", false },
+                    { 2, "Регион", "Region", false },
+                    { 3, "Город", "Sity", false },
+                    { 4, "Деревня", "Village", false },
+                    { 5, "Микрорайон", "Microdistrict", false }
                 });
 
             migrationBuilder.InsertData(
                 schema: "dist",
-                table: "Roles",
-                columns: new[] { "Id", "RoleName" },
+                table: "RoleTypes",
+                columns: new[] { "Id", "Description", "EnumName", "IsDeleted" },
                 values: new object[,]
                 {
-                    { 1, "admin" },
-                    { 2, "user" }
-                });
-
-            migrationBuilder.InsertData(
-                schema: "api",
-                table: "ApiMethodRoles",
-                columns: new[] { "Id", "ApiMethodId", "IsDeleted", "RoleId" },
-                values: new object[,]
-                {
-                    { 1, 1, false, 1 },
-                    { 3, 2, false, 1 },
-                    { 2, 1, false, 2 }
+                    { 1, "Администратор", "Admin", false },
+                    { 2, "Пользователь", "User", false },
+                    { 3, "Тест", "Test", true }
                 });
 
             migrationBuilder.InsertData(
                 schema: "dist",
                 table: "Users",
-                columns: new[] { "Id", "Login", "Password", "RoleId", "UserName" },
+                columns: new[] { "Id", "Login", "Password", "RoleId", "RoleTypeId", "UserName" },
                 values: new object[,]
                 {
-                    { 1, "admin", "123456", 1, "Админ" },
-                    { 2, "user", "123456", 2, "Пользователь" }
+                    { 1, "admin", "123456", 1, null, "Админ" },
+                    { 2, "user", "123456", 2, null, "Пользователь" }
                 });
+
+            migrationBuilder.InsertData(
+                schema: "api",
+                table: "ApiMethodRoles",
+                columns: new[] { "Id", "ApiMethodId", "IsDeleted", "RoleId", "RoleTypeId" },
+                values: new object[] { 1, 1, false, 1, null });
+
+            migrationBuilder.InsertData(
+                schema: "api",
+                table: "ApiMethodRoles",
+                columns: new[] { "Id", "ApiMethodId", "IsDeleted", "RoleId", "RoleTypeId" },
+                values: new object[] { 2, 1, false, 2, null });
+
+            migrationBuilder.InsertData(
+                schema: "api",
+                table: "ApiMethodRoles",
+                columns: new[] { "Id", "ApiMethodId", "IsDeleted", "RoleId", "RoleTypeId" },
+                values: new object[] { 3, 2, false, 1, null });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiMethodRoles_ApiMethodId",
@@ -384,10 +399,10 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 column: "ApiMethodId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ApiMethodRoles_RoleId",
+                name: "IX_ApiMethodRoles_RoleTypeId",
                 schema: "api",
                 table: "ApiMethodRoles",
-                column: "RoleId");
+                column: "RoleTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiMethods_ApiMethodName",
@@ -397,9 +412,9 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CodeAthTypes_CodeAthId",
+                name: "IX_CodeAths_CodeAthId",
                 schema: "dist",
-                table: "CodeAthTypes",
+                table: "CodeAths",
                 column: "CodeAthId");
 
             migrationBuilder.CreateIndex(
@@ -427,16 +442,16 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 column: "RegionTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Users_RoleId",
+                name: "IX_Users_RoleTypeId",
                 schema: "dist",
                 table: "Users",
-                column: "RoleId");
+                column: "RoleTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Drugs_CodeAthTypeId",
+                name: "IX_Drugs_CodeAthId",
                 schema: "tab",
                 table: "Drugs",
-                column: "CodeAthTypeId");
+                column: "CodeAthId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Drugs_VendorId",
@@ -480,7 +495,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 schema: "api");
 
             migrationBuilder.DropTable(
-                name: "Roles",
+                name: "RoleTypes",
                 schema: "dist");
 
             migrationBuilder.DropTable(
@@ -492,7 +507,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 schema: "dist");
 
             migrationBuilder.DropTable(
-                name: "CodeAthTypes",
+                name: "CodeAths",
                 schema: "dist");
 
             migrationBuilder.DropTable(

@@ -4,4 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FarmApp.Service.Interfaces\FarmApp.Service.Interfaces.csproj" />
+  </ItemGroup>
+
 </Project>

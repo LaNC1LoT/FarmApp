@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FarmApp.Domain.Core.Interfaces;
+using System;
 
 namespace FarmApp.Domain.Core.Entity
 {
-    public class Log
+    public class Log : IEntity
     {
         public int Id { get; set; }
         public string UserId { get; set; }

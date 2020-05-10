@@ -1,23 +1,19 @@
-﻿using System;
+﻿using FarmApp.Domain.Core.Implementations;
+using FarmApp.Domain.Core.Interfaces;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FarmApp.Domain.Core.Entity
 {
     /// <summary>
-    /// Роли
+    /// Справочник ролей
     /// </summary>
-    public class Role
+    public class RoleType : EnumEmplimiton, IEntity
     {
-        public Role()
+        public RoleType()
         {
             Users = new HashSet<User>();
             ApiMethodRoles = new HashSet<ApiMethodRole>();
         }
-
-        public int Id { get; set; }
-        public string RoleName { get; set; }
-        public bool? IsDeleted { get; set; }
         public virtual ICollection<User> Users { get; set; }
         public virtual ICollection<ApiMethodRole> ApiMethodRoles { get; set; }
     }

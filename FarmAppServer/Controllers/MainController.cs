@@ -37,9 +37,8 @@ namespace FarmAppServer.Controllers
 
             if (user.IsDeleted ?? true)
                 return BadRequest(new ResponseBody { Result = "Пользователь заблокирован!", Header = "Аунтификация" });
-            //throw new Exception("сука");
 
-            var role = await Ctx.Roles.FirstOrDefaultAsync(x => x.Id == user.RoleId);
+            var role = await Ctx.RoleTypes.FirstOrDefaultAsync(x => x.Id == user.RoleId);
             if (role == null)
                 return NotFound(new ResponseBody { Header = "Аунтификация", Result = "Неизвестная роль пользователя!" });
 
@@ -71,12 +70,12 @@ namespace FarmAppServer.Controllers
             //string roleId = User.Claims.First(c => c.Type == "RoleId").Value;
             //HttpContext.Items.
             var user = await Ctx.Users.FindAsync(int.Parse(userId));
-            user.Role = await Ctx.Roles.FindAsync(user.RoleId);
+            user.RoleType = await Ctx.RoleTypes.FindAsync(user.RoleId);
             return Ok(new
             {
                 user.UserName,
                 user.Login,
-                user.Role?.RoleName
+                user.RoleType?.Description
             });
         }
 

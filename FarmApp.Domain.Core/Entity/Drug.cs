@@ -1,10 +1,9 @@
-﻿using System;
+﻿using FarmApp.Domain.Core.Interfaces;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FarmApp.Domain.Core.Entity
 {
-    public class Drug
+    public class Drug : IEntity
     {
         public Drug()
         {
@@ -16,7 +15,7 @@ namespace FarmApp.Domain.Core.Entity
         public int VendorId { get; set; }
         public bool? IsGeneric { get; set; }
         public bool? IsDeleted { get; set; }
-        public virtual CodeAthType CodeAthType { get; set; }
+        public virtual CodeAth CodeAth { get; set; }
         public virtual Vendor Vendor { get; set; }
         public virtual ICollection<Sale> Sales { get; set; }
     }

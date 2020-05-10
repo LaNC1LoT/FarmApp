@@ -1,28 +1,27 @@
 ﻿using FarmApp.Domain.Core.Entity;
 using FarmApp.Infrastructure.Data.DataBaseHelper;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace FarmApp.Infrastructure.Data.Contexts
 {
     public class FarmAppContext : DbContext
     {
+        public FarmAppContext(DbContextOptions<FarmAppContext> options)
+            : base(options)
+        { }
+
         public virtual DbSet<ApiMethod> ApiMethods { get; set; }
         public virtual DbSet<ApiMethodRole> ApiMethodRoles { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<Role> Roles { get; set; }
+        public virtual DbSet<RoleType> RoleTypes { get; set; }
         public virtual DbSet<Drug> Drugs { get; set; }
-        public virtual DbSet<CodeAthType> CodeAthTypes { get; set; }
+        public virtual DbSet<CodeAth> CodeAths { get; set; }
         public virtual DbSet<Pharmacy> Pharmacies { get; set; }
         public virtual DbSet<Region> Regions { get; set; }
         public virtual DbSet<RegionType> RegionTypes { get; set; }
         public virtual DbSet<Sale> Sales { get; set; }
         public virtual DbSet<Vendor> Vendors { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
-
-        public FarmAppContext(DbContextOptions<FarmAppContext> options)
-            : base(options)
-        { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,12 +43,13 @@ namespace FarmApp.Infrastructure.Data.Contexts
                     entity.Property(p => p.Exception).HasMaxLength(4000);
                 });
 
-                modelBuilder.Entity<Role>(entity =>
+                modelBuilder.Entity<RoleType>(entity =>
                 {
-                    entity.ToTable(Table.Role, Schema.Dist);
-                    entity.Property(p => p.RoleName).IsRequired().HasMaxLength(50);
+                    entity.ToTable(Table.RoleType, Schema.Dist);
+                    entity.Property(p => p.EnumName).IsRequired().HasMaxLength(50);
+                    entity.Property(p => p.Description).IsRequired().HasMaxLength(50);
                     entity.Property(p => p.IsDeleted).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
-                    entity.HasData(initData.InitRoles);
+                    entity.HasData(initData.InitRoles());
                 });
 
                 modelBuilder.Entity<ApiMethod>(entity =>
@@ -70,7 +70,7 @@ namespace FarmApp.Infrastructure.Data.Contexts
                 {
                     entity.ToTable(Table.ApiMethodRole, Schema.Api);
                     entity.Property(p => p.IsDeleted).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
-                    entity.HasOne(p => p.Role).WithMany(w => w.ApiMethodRoles).OnDelete(DeleteBehavior.Restrict);
+                    entity.HasOne(p => p.RoleType).WithMany(w => w.ApiMethodRoles).OnDelete(DeleteBehavior.Restrict);
                     entity.HasOne(p => p.ApiMethod).WithMany(w => w.ApiMethodRoles).OnDelete(DeleteBehavior.Restrict);
                     entity.HasData(initData.InitApitMethodRoles);
                 });
@@ -82,7 +82,7 @@ namespace FarmApp.Infrastructure.Data.Contexts
                     entity.Property(p => p.Password).IsRequired().HasMaxLength(20);
                     entity.Property(p => p.UserName).IsRequired().HasMaxLength(255);
                     entity.Property(p => p.IsDeleted).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
-                    entity.HasOne(h => h.Role).WithMany(w => w.Users).OnDelete(DeleteBehavior.Restrict);
+                    entity.HasOne(h => h.RoleType).WithMany(w => w.Users).OnDelete(DeleteBehavior.Restrict);
                     entity.HasData(initData.InitUsers);
                 });
 
@@ -92,17 +92,17 @@ namespace FarmApp.Infrastructure.Data.Contexts
                     entity.Property(p => p.DrugName).IsRequired().HasMaxLength(255);
                     entity.Property(p => p.IsGeneric).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
                     entity.Property(p => p.IsDeleted).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
-                    entity.HasOne(h => h.CodeAthType).WithMany(w => w.Drugs).OnDelete(DeleteBehavior.Restrict);
+                    entity.HasOne(h => h.CodeAth).WithMany(w => w.Drugs).OnDelete(DeleteBehavior.Restrict);
                     entity.HasOne(h => h.Vendor).WithMany(w => w.Drugs).OnDelete(DeleteBehavior.Restrict);
                 });
 
-                modelBuilder.Entity<CodeAthType>(entity =>
+                modelBuilder.Entity<CodeAth>(entity =>
                 {
-                    entity.ToTable(Table.CodeAthType, Schema.Dist);
+                    entity.ToTable(Table.CodeAth, Schema.Dist);
                     entity.Property(p => p.Code).IsRequired().HasMaxLength(50);
                     entity.Property(p => p.NameAth).IsRequired().HasMaxLength(350);
                     entity.Property(p => p.IsDeleted).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
-                    entity.HasOne(h => h.CodeAth).WithMany(w => w.CodeAthTypes).OnDelete(DeleteBehavior.Restrict);
+                    entity.HasOne(h => h.CodeAths).WithMany(w => w.ChieldCodeAths).OnDelete(DeleteBehavior.Restrict);
                 });
 
                 modelBuilder.Entity<Sale>(entity =>
@@ -131,9 +131,10 @@ namespace FarmApp.Infrastructure.Data.Contexts
                 modelBuilder.Entity<RegionType>(entity =>
                 {
                     entity.ToTable(Table.RegionType, Schema.Dist);
-                    entity.Property(p => p.RegionTypeName).IsRequired().HasMaxLength(255);
+                    entity.Property(p => p.EnumName).IsRequired().HasMaxLength(50);
+                    entity.Property(p => p.Description).IsRequired().HasMaxLength(50);
                     entity.Property(p => p.IsDeleted).IsRequired().HasDefaultValueSql(CommandSql.DefaultFalse);
-                    entity.HasData(initData.InitRegionTypes);
+                    entity.HasData(initData.InitRegionTypes());
                 });
 
                 modelBuilder.Entity<Region>(entity =>
@@ -155,8 +156,5 @@ namespace FarmApp.Infrastructure.Data.Contexts
                 });
             }
         }
-
-
-
     }
 }

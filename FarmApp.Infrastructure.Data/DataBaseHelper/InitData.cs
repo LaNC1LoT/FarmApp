@@ -1,32 +1,29 @@
 ﻿using FarmApp.Domain.Core.Entity;
+using FarmApp.Domain.Core.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FarmApp.Infrastructure.Data.DataBaseHelper
 {
-    public class InitData : IDisposable
+    internal class InitData : IDisposable
     {
-        public IEnumerable<Role> InitRoles { get; private set; } = new List<Role>(2)
+        public IEnumerable<RoleType> InitRoles()
         {
-            new Role { Id = 1, RoleName = "admin" },
-            new Role { Id = 2, RoleName = "user" },
-        };
+            return typeof(Roles).EnumToList<RoleType>();
+        }
+
+        public IEnumerable<RegionType> InitRegionTypes()
+        {
+            return typeof(RegionTypes).EnumToList<RegionType>();
+        }
 
         public IEnumerable<User> InitUsers { get; private set; } = new List<User>(2)
         {
-            new User { Id = 1, UserName = "Админ", Login = "admin", Password = "123456", RoleId = 1 },
-            new User { Id = 2, UserName = "Пользователь", Login = "user", Password = "123456", RoleId = 2 },
+            new User { Id = 1, UserName = "Админ", Login = "admin", Password = "123456", RoleId = (int)Roles.Admin },
+            new User { Id = 2, UserName = "Пользователь", Login = "user", Password = "123456", RoleId = (int)Roles.User },
         };
 
-        public IEnumerable<RegionType> InitRegionTypes { get; private set; } = new List<RegionType>(5)
-        {
-            new RegionType{ Id = 1, RegionTypeName = "Государство" },
-            new RegionType{ Id = 2, RegionTypeName = "Субъект(регион)" },
-            new RegionType{ Id = 3, RegionTypeName = "Город" },
-            new RegionType{ Id = 4, RegionTypeName = "Сёла, деревни и др." },
-            new RegionType{ Id = 5, RegionTypeName = "Микрорайон" }
-        };
+
 
         public IEnumerable<ApiMethod> InitApiMethods { get; private set; } = new List<ApiMethod>(2)
         {
@@ -71,14 +68,12 @@ namespace FarmApp.Infrastructure.Data.DataBaseHelper
                     // TODO: освободить управляемое состояние (управляемые объекты).
                 }
 
-                InitRoles = null;
-                InitUsers = null;
-                InitRegionTypes = null;
-                InitApiMethods = null;
-                InitApitMethodRoles = null;
-
                 // TODO: освободить неуправляемые ресурсы (неуправляемые объекты) и переопределить ниже метод завершения.
                 // TODO: задать большим полям значение NULL.
+
+                InitUsers = null;
+                InitApiMethods = null;
+                InitApitMethodRoles = null;
 
                 disposedValue = true;
             }

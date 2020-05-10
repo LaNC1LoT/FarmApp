@@ -1,10 +1,9 @@
-﻿using System;
+﻿using FarmApp.Domain.Core.Interfaces;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FarmApp.Domain.Core.Entity
 {
-    public class Vendor
+    public class Vendor : IEntity
     {
         public Vendor()
         {

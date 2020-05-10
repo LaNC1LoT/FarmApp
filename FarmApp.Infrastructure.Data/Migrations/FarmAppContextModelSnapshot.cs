@@ -112,11 +112,14 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RoleTypeId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApiMethodId");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleTypeId");
 
                     b.ToTable("ApiMethodRoles","api");
 
@@ -144,7 +147,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.CodeAthType", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entity.CodeAth", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -174,7 +177,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
 
                     b.HasIndex("CodeAthId");
 
-                    b.ToTable("CodeAthTypes","dist");
+                    b.ToTable("CodeAths","dist");
                 });
 
             modelBuilder.Entity("FarmApp.Domain.Core.Entity.Drug", b =>
@@ -183,6 +186,9 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CodeAthId")
+                        .HasColumnType("int");
 
                     b.Property<int>("CodeAthTypeId")
                         .HasColumnType("int");
@@ -209,7 +215,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CodeAthTypeId");
+                    b.HasIndex("CodeAthId");
 
                     b.HasIndex("VendorId");
 
@@ -381,16 +387,21 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("EnumName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
                     b.Property<bool?>("IsDeleted")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValueSql("((0))");
-
-                    b.Property<string>("RegionTypeName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(255)")
-                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 
@@ -400,36 +411,56 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         new
                         {
                             Id = 1,
-                            RegionTypeName = "Государство"
+                            Description = "Страна",
+                            EnumName = "County",
+                            IsDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            RegionTypeName = "Субъект(регион)"
+                            Description = "Регион",
+                            EnumName = "Region",
+                            IsDeleted = false
                         },
                         new
                         {
                             Id = 3,
-                            RegionTypeName = "Город"
+                            Description = "Город",
+                            EnumName = "Sity",
+                            IsDeleted = false
                         },
                         new
                         {
                             Id = 4,
-                            RegionTypeName = "Сёла, деревни и др."
+                            Description = "Деревня",
+                            EnumName = "Village",
+                            IsDeleted = false
                         },
                         new
                         {
                             Id = 5,
-                            RegionTypeName = "Микрорайон"
+                            Description = "Микрорайон",
+                            EnumName = "Microdistrict",
+                            IsDeleted = false
                         });
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Role", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entity.RoleType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("EnumName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<bool?>("IsDeleted")
                         .IsRequired()
@@ -437,25 +468,31 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValueSql("((0))");
 
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
                     b.HasKey("Id");
 
-                    b.ToTable("Roles","dist");
+                    b.ToTable("RoleTypes","dist");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            RoleName = "admin"
+                            Description = "Администратор",
+                            EnumName = "Admin",
+                            IsDeleted = false
                         },
                         new
                         {
                             Id = 2,
-                            RoleName = "user"
+                            Description = "Пользователь",
+                            EnumName = "User",
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Тест",
+                            EnumName = "Test",
+                            IsDeleted = true
                         });
                 });
 
@@ -528,6 +565,9 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RoleTypeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasColumnType("nvarchar(255)")
@@ -535,7 +575,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleTypeId");
 
                     b.ToTable("Users","dist");
 
@@ -595,28 +635,26 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FarmApp.Domain.Core.Entity.Role", "Role")
+                    b.HasOne("FarmApp.Domain.Core.Entity.RoleType", "RoleType")
                         .WithMany("ApiMethodRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("RoleTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.CodeAthType", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entity.CodeAth", b =>
                 {
-                    b.HasOne("FarmApp.Domain.Core.Entity.CodeAthType", "CodeAth")
-                        .WithMany("CodeAthTypes")
+                    b.HasOne("FarmApp.Domain.Core.Entity.CodeAth", "CodeAths")
+                        .WithMany("ChieldCodeAths")
                         .HasForeignKey("CodeAthId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("FarmApp.Domain.Core.Entity.Drug", b =>
                 {
-                    b.HasOne("FarmApp.Domain.Core.Entity.CodeAthType", "CodeAthType")
+                    b.HasOne("FarmApp.Domain.Core.Entity.CodeAth", "CodeAth")
                         .WithMany("Drugs")
-                        .HasForeignKey("CodeAthTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("CodeAthId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("FarmApp.Domain.Core.Entity.Vendor", "Vendor")
                         .WithMany("Drugs")
@@ -670,11 +708,10 @@ namespace FarmApp.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("FarmApp.Domain.Core.Entity.User", b =>
                 {
-                    b.HasOne("FarmApp.Domain.Core.Entity.Role", "Role")
+                    b.HasOne("FarmApp.Domain.Core.Entity.RoleType", "RoleType")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .HasForeignKey("RoleTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FarmApp.Domain.Core\FarmApp.Domain.Core.csproj" />
+    <ProjectReference Include="..\FarmApp.Domain.Interfaces\FarmApp.Domain.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

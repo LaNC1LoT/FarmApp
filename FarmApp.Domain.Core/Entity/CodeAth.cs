@@ -1,14 +1,13 @@
-﻿using System;
+﻿using FarmApp.Domain.Core.Interfaces;
 using System.Collections.Generic;
-using System.Text;
 
 namespace FarmApp.Domain.Core.Entity
 {
-    public class CodeAthType
+    public class CodeAth : IEntity
     {
-        public CodeAthType()
+        public CodeAth()
         {
-            CodeAthTypes = new HashSet<CodeAthType>();
+            ChieldCodeAths = new HashSet<CodeAth>();
             Drugs = new HashSet<Drug>();
         }
 
@@ -17,8 +16,8 @@ namespace FarmApp.Domain.Core.Entity
         public string Code { get; set; }
         public string NameAth { get; set; }
         public bool? IsDeleted { get; set; }
-        public virtual CodeAthType CodeAth { get; set; }
-        public virtual ICollection<CodeAthType> CodeAthTypes { get; set; }
+        public virtual CodeAth CodeAths { get; set; }
+        public virtual ICollection<CodeAth> ChieldCodeAths { get; set; }
         public virtual ICollection<Drug> Drugs { get; set; }
     }
 }
