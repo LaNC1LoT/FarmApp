@@ -1,4 +1,4 @@
-﻿using FarmApp.Domain.Core.Entity;
+﻿using FarmApp.Domain.Core.Entities;
 using FarmApp.Service.Interfaces.Services;
 using System;
 using System.Collections.Generic;

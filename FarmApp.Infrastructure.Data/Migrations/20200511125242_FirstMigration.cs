@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FarmApp.Infrastructure.Data.Migrations
 {
-    public partial class MigrateDB : Migration
+    public partial class FirstMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -180,9 +180,8 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ApiMethodId = table.Column<int>(nullable: false),
-                    RoleId = table.Column<int>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
-                    RoleTypeId = table.Column<int>(nullable: true)
+                    RoleTypeId = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
                 },
                 constraints: table =>
                 {
@@ -213,9 +212,8 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     Login = table.Column<string>(maxLength: 20, nullable: false),
                     Password = table.Column<string>(maxLength: 20, nullable: false),
                     UserName = table.Column<string>(maxLength: 255, nullable: false),
-                    RoleId = table.Column<int>(nullable: false),
-                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))"),
-                    RoleTypeId = table.Column<int>(nullable: true)
+                    RoleTypeId = table.Column<int>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValueSql: "((0))")
                 },
                 constraints: table =>
                 {
@@ -365,32 +363,25 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                schema: "dist",
-                table: "Users",
-                columns: new[] { "Id", "Login", "Password", "RoleId", "RoleTypeId", "UserName" },
+                schema: "api",
+                table: "ApiMethodRoles",
+                columns: new[] { "Id", "ApiMethodId", "IsDeleted", "RoleTypeId" },
                 values: new object[,]
                 {
-                    { 1, "admin", "123456", 1, null, "Админ" },
-                    { 2, "user", "123456", 2, null, "Пользователь" }
+                    { 1, 1, false, 1 },
+                    { 3, 2, false, 1 },
+                    { 2, 1, false, 2 }
                 });
 
             migrationBuilder.InsertData(
-                schema: "api",
-                table: "ApiMethodRoles",
-                columns: new[] { "Id", "ApiMethodId", "IsDeleted", "RoleId", "RoleTypeId" },
-                values: new object[] { 1, 1, false, 1, null });
-
-            migrationBuilder.InsertData(
-                schema: "api",
-                table: "ApiMethodRoles",
-                columns: new[] { "Id", "ApiMethodId", "IsDeleted", "RoleId", "RoleTypeId" },
-                values: new object[] { 2, 1, false, 2, null });
-
-            migrationBuilder.InsertData(
-                schema: "api",
-                table: "ApiMethodRoles",
-                columns: new[] { "Id", "ApiMethodId", "IsDeleted", "RoleId", "RoleTypeId" },
-                values: new object[] { 3, 2, false, 1, null });
+                schema: "dist",
+                table: "Users",
+                columns: new[] { "Id", "Login", "Password", "RoleTypeId", "UserName" },
+                values: new object[,]
+                {
+                    { 1, "admin", "123456", 1, "Админ" },
+                    { 2, "user", "123456", 2, "Пользователь" }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ApiMethodRoles_ApiMethodId",

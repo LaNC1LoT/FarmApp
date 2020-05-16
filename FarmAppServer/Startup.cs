@@ -1,4 +1,8 @@
-﻿using FarmApp.Infrastructure.Data.Contexts;
+﻿using FarmApp.Domain.Interfaces.Repositories;
+using FarmApp.Domain.Interfaces.UnitOfWorks;
+using FarmApp.Infrastructure.Data.Contexts;
+using FarmApp.Infrastructure.Data.Repositoreies;
+using FarmApp.Infrastructure.Data.UnitOfWorks;
 using FarmAppServer.Middlewares;
 using FarmAppServer.Models;
 using FarmAppServer.Services;
@@ -36,6 +40,8 @@ namespace FarmAppServer
 
             services.AddScoped<ICustomLogger, CustomLogger>();
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddControllers();
 
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
@@ -61,12 +67,14 @@ namespace FarmAppServer
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, FarmAppContext farmAppContext)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            farmAppContext.Database.Migrate();
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -75,17 +83,19 @@ namespace FarmAppServer
 
             app.UseCors(builder => builder.WithOrigins(Configuration["ApplicationSettings:Client_URL"].ToString()).AllowAnyHeader().AllowAnyMethod());
 
-            app.UseMiddleware<ErrorHandlingMiddleware>();
-            app.UseMiddleware<ValidationMiddleware>();      
+            //app.UseMiddleware<ErrorHandlingMiddleware>();
+            //app.UseMiddleware<ValidationMiddleware>();      
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
 
-            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
-            var context = serviceScope.ServiceProvider.GetRequiredService<FarmAppContext>();
-            context.Database.Migrate();
+            
+
+            //using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            //var context = serviceScope.ServiceProvider.GetRequiredService<FarmAppContext>();
+            //context.Database.Migrate();
         }
     }
 }

@@ -2,7 +2,7 @@
 using FarmApp.Domain.Core.Interfaces;
 using System.Collections.Generic;
 
-namespace FarmApp.Domain.Core.Entity
+namespace FarmApp.Domain.Core.Entities
 {
     /// <summary>
     /// Справочник ролей

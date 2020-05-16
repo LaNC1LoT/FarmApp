@@ -1,4 +1,4 @@
-﻿using FarmApp.Domain.Core.Entity;
+﻿using FarmApp.Domain.Core.Entities;
 using FarmApp.Infrastructure.Data.DataBaseHelper;
 using Microsoft.EntityFrameworkCore;
 

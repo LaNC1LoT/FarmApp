@@ -1,7 +1,7 @@
 ﻿using FarmApp.Domain.Core.Interfaces;
 using System;
 
-namespace FarmApp.Domain.Core.Entity
+namespace FarmApp.Domain.Core.Entities
 {
     public class Sale : IEntity
     {

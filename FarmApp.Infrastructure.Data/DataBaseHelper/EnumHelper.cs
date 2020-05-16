@@ -1,5 +1,5 @@
 ﻿using FarmApp.Domain.Core.Attributes;
-using FarmApp.Domain.Core.Entity;
+using FarmApp.Domain.Core.Entities;
 using FarmApp.Domain.Core.Interfaces;
 using Microsoft.EntityFrameworkCore.Internal;
 using System;

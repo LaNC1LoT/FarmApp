@@ -1,4 +1,4 @@
-﻿using FarmApp.Domain.Core.Entity;
+﻿using FarmApp.Domain.Core.Entities;
 using FarmApp.Domain.Core.Enums;
 using System;
 using System.Collections.Generic;
@@ -19,8 +19,8 @@ namespace FarmApp.Infrastructure.Data.DataBaseHelper
 
         public IEnumerable<User> InitUsers { get; private set; } = new List<User>(2)
         {
-            new User { Id = 1, UserName = "Админ", Login = "admin", Password = "123456", RoleId = (int)Roles.Admin },
-            new User { Id = 2, UserName = "Пользователь", Login = "user", Password = "123456", RoleId = (int)Roles.User },
+            new User { Id = 1, UserName = "Админ", Login = "admin", Password = "123456", RoleTypeId = (int)Roles.Admin },
+            new User { Id = 2, UserName = "Пользователь", Login = "user", Password = "123456", RoleTypeId = (int)Roles.User },
         };
 
 
@@ -33,9 +33,9 @@ namespace FarmApp.Infrastructure.Data.DataBaseHelper
 
         public IEnumerable<ApiMethodRole> InitApitMethodRoles { get; private set; } = new List<ApiMethodRole>(3)
         {
-            new ApiMethodRole{ Id = 1, ApiMethodId = 1, RoleId = 1, IsDeleted = false },
-            new ApiMethodRole{ Id = 2, ApiMethodId = 1, RoleId = 2, IsDeleted = false },
-            new ApiMethodRole{ Id = 3, ApiMethodId = 2, RoleId = 1, IsDeleted = false }
+            new ApiMethodRole{ Id = 1, ApiMethodId = 1, RoleTypeId = 1, IsDeleted = false },
+            new ApiMethodRole{ Id = 2, ApiMethodId = 1, RoleTypeId = 2, IsDeleted = false },
+            new ApiMethodRole{ Id = 3, ApiMethodId = 2, RoleTypeId = 1, IsDeleted = false }
         };
 
         //public static IEnumerable<Region> InitRegions

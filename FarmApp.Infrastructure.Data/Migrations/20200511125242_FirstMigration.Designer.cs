@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FarmApp.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(FarmAppContext))]
-    [Migration("20200510182815_MigrateDB")]
-    partial class MigrateDB
+    [Migration("20200511125242_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,7 +21,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.ApiMethod", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.ApiMethod", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -95,7 +95,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.ApiMethodRole", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.ApiMethodRole", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,10 +111,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         .HasColumnType("bit")
                         .HasDefaultValueSql("((0))");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RoleTypeId")
+                    b.Property<int>("RoleTypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -131,25 +128,25 @@ namespace FarmApp.Infrastructure.Data.Migrations
                             Id = 1,
                             ApiMethodId = 1,
                             IsDeleted = false,
-                            RoleId = 1
+                            RoleTypeId = 1
                         },
                         new
                         {
                             Id = 2,
                             ApiMethodId = 1,
                             IsDeleted = false,
-                            RoleId = 2
+                            RoleTypeId = 2
                         },
                         new
                         {
                             Id = 3,
                             ApiMethodId = 2,
                             IsDeleted = false,
-                            RoleId = 1
+                            RoleTypeId = 1
                         });
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.CodeAth", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.CodeAth", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -182,7 +179,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     b.ToTable("CodeAths","dist");
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Drug", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.Drug", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -224,7 +221,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     b.ToTable("Drugs","tab");
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Log", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.Log", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -295,7 +292,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     b.ToTable("Logs","log");
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Pharmacy", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.Pharmacy", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -344,7 +341,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     b.ToTable("Pharmacies","dist");
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Region", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.Region", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -382,7 +379,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     b.ToTable("Regions","dist");
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.RegionType", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.RegionType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -447,7 +444,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.RoleType", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.RoleType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -498,7 +495,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         });
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Sale", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.Sale", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -541,7 +538,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     b.ToTable("Sales","tab");
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.User", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -564,10 +561,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(20)")
                         .HasMaxLength(20);
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RoleTypeId")
+                    b.Property<int>("RoleTypeId")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
@@ -587,7 +581,7 @@ namespace FarmApp.Infrastructure.Data.Migrations
                             Id = 1,
                             Login = "admin",
                             Password = "123456",
-                            RoleId = 1,
+                            RoleTypeId = 1,
                             UserName = "Админ"
                         },
                         new
@@ -595,12 +589,12 @@ namespace FarmApp.Infrastructure.Data.Migrations
                             Id = 2,
                             Login = "user",
                             Password = "123456",
-                            RoleId = 2,
+                            RoleTypeId = 2,
                             UserName = "Пользователь"
                         });
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Vendor", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.Vendor", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -629,91 +623,93 @@ namespace FarmApp.Infrastructure.Data.Migrations
                     b.ToTable("Vendors","dist");
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.ApiMethodRole", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.ApiMethodRole", b =>
                 {
-                    b.HasOne("FarmApp.Domain.Core.Entity.ApiMethod", "ApiMethod")
+                    b.HasOne("FarmApp.Domain.Core.Entities.ApiMethod", "ApiMethod")
                         .WithMany("ApiMethodRoles")
                         .HasForeignKey("ApiMethodId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FarmApp.Domain.Core.Entity.RoleType", "RoleType")
+                    b.HasOne("FarmApp.Domain.Core.Entities.RoleType", "RoleType")
                         .WithMany("ApiMethodRoles")
                         .HasForeignKey("RoleTypeId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.CodeAth", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.CodeAth", b =>
                 {
-                    b.HasOne("FarmApp.Domain.Core.Entity.CodeAth", "CodeAths")
+                    b.HasOne("FarmApp.Domain.Core.Entities.CodeAth", "CodeAths")
                         .WithMany("ChieldCodeAths")
                         .HasForeignKey("CodeAthId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Drug", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.Drug", b =>
                 {
-                    b.HasOne("FarmApp.Domain.Core.Entity.CodeAth", "CodeAth")
+                    b.HasOne("FarmApp.Domain.Core.Entities.CodeAth", "CodeAth")
                         .WithMany("Drugs")
                         .HasForeignKey("CodeAthId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("FarmApp.Domain.Core.Entity.Vendor", "Vendor")
+                    b.HasOne("FarmApp.Domain.Core.Entities.Vendor", "Vendor")
                         .WithMany("Drugs")
                         .HasForeignKey("VendorId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Pharmacy", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.Pharmacy", b =>
                 {
-                    b.HasOne("FarmApp.Domain.Core.Entity.Pharmacy", "ParentPharmacy")
+                    b.HasOne("FarmApp.Domain.Core.Entities.Pharmacy", "ParentPharmacy")
                         .WithMany("Pharmacies")
                         .HasForeignKey("PharmacyId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("FarmApp.Domain.Core.Entity.Region", "Region")
+                    b.HasOne("FarmApp.Domain.Core.Entities.Region", "Region")
                         .WithMany("Pharmacies")
                         .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Region", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.Region", b =>
                 {
-                    b.HasOne("FarmApp.Domain.Core.Entity.Region", "ParentRegion")
+                    b.HasOne("FarmApp.Domain.Core.Entities.Region", "ParentRegion")
                         .WithMany("Regions")
                         .HasForeignKey("RegionId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("FarmApp.Domain.Core.Entity.RegionType", "RegionType")
+                    b.HasOne("FarmApp.Domain.Core.Entities.RegionType", "RegionType")
                         .WithMany("Regions")
                         .HasForeignKey("RegionTypeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.Sale", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.Sale", b =>
                 {
-                    b.HasOne("FarmApp.Domain.Core.Entity.Drug", "Drug")
+                    b.HasOne("FarmApp.Domain.Core.Entities.Drug", "Drug")
                         .WithMany("Sales")
                         .HasForeignKey("DrugId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FarmApp.Domain.Core.Entity.Pharmacy", "Pharmacy")
+                    b.HasOne("FarmApp.Domain.Core.Entities.Pharmacy", "Pharmacy")
                         .WithMany("Sales")
                         .HasForeignKey("PharmacyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FarmApp.Domain.Core.Entity.User", b =>
+            modelBuilder.Entity("FarmApp.Domain.Core.Entities.User", b =>
                 {
-                    b.HasOne("FarmApp.Domain.Core.Entity.RoleType", "RoleType")
+                    b.HasOne("FarmApp.Domain.Core.Entities.RoleType", "RoleType")
                         .WithMany("Users")
                         .HasForeignKey("RoleTypeId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

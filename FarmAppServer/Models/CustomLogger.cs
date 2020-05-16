@@ -1,4 +1,4 @@
-﻿using FarmApp.Domain.Core.Entity;
+﻿using FarmApp.Domain.Core.Entities;
 
 namespace FarmAppServer.Models
 {

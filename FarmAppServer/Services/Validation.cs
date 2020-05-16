@@ -1,4 +1,4 @@
-﻿using FarmApp.Domain.Core.Entity;
+﻿using FarmApp.Domain.Core.Entities;
 using FarmApp.Infrastructure.Data.Contexts;
 using FarmAppServer.Extantions;
 using FarmAppServer.Models;
@@ -78,7 +78,7 @@ namespace FarmAppServer.Services
                     if (!string.IsNullOrWhiteSpace(logger.Log.UserId) && !string.IsNullOrWhiteSpace(logger.Log.RoleId) &&
                         int.TryParse(logger.Log.UserId, out int resultUser) && int.TryParse(logger.Log.RoleId, out int resultRole))
                     {
-                        var user = Ctx.Users.FirstOrDefault(x => x.Id == resultUser && x.RoleId == resultRole);
+                        var user = Ctx.Users.FirstOrDefault(x => x.Id == resultUser && x.RoleTypeId == resultRole);
                         if (user == null)
                         {
                             logger.Log.StatusCode = 401;
@@ -93,7 +93,7 @@ namespace FarmAppServer.Services
                             return false;
                         }
                         
-                        var  apiMethodRoles = Ctx.ApiMethodRoles.FirstOrDefault(x => x.ApiMethodId == apiMethod.Id && x.RoleId == user.RoleId);
+                        var  apiMethodRoles = Ctx.ApiMethodRoles.FirstOrDefault(x => x.ApiMethodId == apiMethod.Id && x.RoleTypeId == user.RoleTypeId);
                         if (apiMethodRoles == null)
                         {
                             logger.Log.StatusCode = 403;
