@@ -1,6 +1,6 @@
 ﻿using FarmApp.Domain.Core.Entities;
 using FarmApp.Infrastructure.Data.Contexts;
-using FarmAppServer.Models;
+using FarmAppServer.Settings;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -18,47 +18,48 @@ namespace FarmAppServer.Controllers
     [ApiController]
     public class MainController : Controller
     {
-        private readonly ApplicationSettings AppSettings;
+        private readonly ApplicationSetting AppSettings;
         private readonly FarmAppContext Ctx;
-        public MainController(FarmAppContext ctx, IOptions<ApplicationSettings> appSettings)
+        public MainController(FarmAppContext ctx, IOptions<ApplicationSetting> appSettings)
         {
             Ctx = ctx;
             AppSettings = appSettings.Value;
         }
 
         [HttpPost, Route("GetToken")]
-        public async Task<IActionResult> Auntification([FromBody]RequestBody requestBody)
+        public async Task<IActionResult> Auntification()
         {
-            var user = JsonConvert.DeserializeObject<User>(requestBody.Param);
-            user = await Ctx.Users.FirstOrDefaultAsync(x => x.Login == user.Login && x.Password == user.Password);
+            return Ok();
+            //var user = JsonConvert.DeserializeObject<User>(requestBody.Param);
+            //user = await Ctx.Users.FirstOrDefaultAsync(x => x.Login == user.Login && x.Password == user.Password);
    
-            if (user == null)
-                return NotFound(new ResponseBody { Header = "Аунтификация", Result = "Неверный логин или пароль!"});
+            //if (user == null)
+            //    return NotFound(new ResponseBody { Header = "Аунтификация", Result = "Неверный логин или пароль!"});
 
-            if (user.IsDeleted ?? true)
-                return BadRequest(new ResponseBody { Result = "Пользователь заблокирован!", Header = "Аунтификация" });
+            //if (user.IsDeleted ?? true)
+            //    return BadRequest(new ResponseBody { Result = "Пользователь заблокирован!", Header = "Аунтификация" });
 
-            var role = await Ctx.RoleTypes.FirstOrDefaultAsync(x => x.Id == user.RoleTypeId);
-            if (role == null)
-                return NotFound(new ResponseBody { Header = "Аунтификация", Result = "Неизвестная роль пользователя!" });
+            //var role = await Ctx.RoleTypes.FirstOrDefaultAsync(x => x.Id == user.RoleTypeId);
+            //if (role == null)
+            //    return NotFound(new ResponseBody { Header = "Аунтификация", Result = "Неизвестная роль пользователя!" });
 
-            if (role.IsDeleted ?? true)
-                return BadRequest(new ResponseBody { Header = "Аунтификация", Result = "Роль удалена!" });
+            //if (role.IsDeleted ?? true)
+            //    return BadRequest(new ResponseBody { Header = "Аунтификация", Result = "Роль удалена!" });
 
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim("UserId", user.Id.ToString()),
-                    new Claim("RoleId", role.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-            var token = tokenHandler.WriteToken(securityToken);
-            return Ok(new ResponseBody { Header = "Ok", Result = token });
+            //var tokenDescriptor = new SecurityTokenDescriptor
+            //{
+            //    Subject = new ClaimsIdentity(new Claim[]
+            //    {
+            //        new Claim("UserId", user.Id.ToString()),
+            //        new Claim("RoleId", role.Id.ToString())
+            //    }),
+            //    Expires = DateTime.UtcNow.AddDays(1),
+            //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(AppSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
+            //};
+            //var tokenHandler = new JwtSecurityTokenHandler();
+            //var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            //var token = tokenHandler.WriteToken(securityToken);
+            //return Ok(new ResponseBody { Header = "Ok", Result = token });
         }
 
         //[Access]

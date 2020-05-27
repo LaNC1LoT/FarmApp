@@ -2,6 +2,9 @@
 using FarmApp.Domain.Interfaces.Repositories;
 using FarmApp.Infrastructure.Data.Contexts;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace FarmApp.Infrastructure.Data.Repositoreies
 {
@@ -28,5 +31,15 @@ namespace FarmApp.Infrastructure.Data.Repositoreies
                 dbSet.Attach(entity);
             dbSet.Remove(entity);
         }
+
+        //public TEntity FirstOrDefault(Expression<Func<TEntity, bool>> filter = null)
+        //{
+        //    return farmAppContext.Set<TEntity>().FirstOrDefault(filter);
+        //}
+
+        //public IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> filter = null)
+        //{
+        //    return farmAppContext.Set<TEntity>().Where(filter);
+        //}
     }
 }

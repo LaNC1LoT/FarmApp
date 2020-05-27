@@ -1,10 +1,10 @@
 ﻿using FarmApp.Domain.Core.Entities;
 
-namespace FarmAppServer.Models
+namespace FarmAppServer.Services
 {
     public class CustomLogger : ICustomLogger
     {
         public Log Log { get; set; } = new Log();
-        public ResponseBody ResponseBody { get; set; }
+        //public ResponseBody ResponseBody { get; set; }
     }
 }

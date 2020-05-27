@@ -1,5 +1,4 @@
 ﻿using FarmApp.Infrastructure.Data.Contexts;
-using FarmAppServer.Models;
 using FarmAppServer.Services;
 using Microsoft.AspNetCore.Http;
 using System.Text;
@@ -26,7 +25,7 @@ namespace FarmAppServer.Middlewares
             {
                 context.Response.StatusCode = logger.Log.StatusCode.Value;
                 context.Response.ContentType = "application/json; charset=utf-8";
-                await context.Response.WriteAsync(logger.ResponseBody.ToString(), Encoding.UTF8);
+                await context.Response.WriteAsync(/*logger.ResponseBody.ToString()*/ "asd", Encoding.UTF8);
             }
         }
     }

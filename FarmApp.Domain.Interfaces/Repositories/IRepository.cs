@@ -1,5 +1,7 @@
 ﻿using FarmApp.Domain.Core.Interfaces;
 using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
 
 namespace FarmApp.Domain.Interfaces.Repositories
 {
@@ -27,5 +29,10 @@ namespace FarmApp.Domain.Interfaces.Repositories
         /// </summary>
         /// <param name="entity">Сущность</param>
         void Delete(TEntity entitiy);
+
+
+        //TEntity FirstOrDefault(Expression<Func<TEntity, bool>> filter = null);
+
+        //int Count(Expression<Func<TEntity, int>> filter = null);
     }
 }

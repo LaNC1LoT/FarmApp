@@ -61,4 +61,22 @@ namespace FarmApp.Domain.Core.Enums
         [EnumHelper("Микрорайон", false)]
         Microdistrict = 5
     }
+
+    public enum Api
+    {
+        GetUser = 1,
+        CreateUser = 2,
+        UpdateUser = 3,
+        DeleteUser = 4,
+        AutorizationUser = 5
+    }
+
+    public enum Result
+    {
+        Success = 1,
+        UnknownError = 2,
+        NotFound = 3,
+        NotAccess = 4,
+        NotValid = 5
+    }
 }

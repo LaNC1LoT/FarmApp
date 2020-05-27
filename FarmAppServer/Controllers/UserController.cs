@@ -1,48 +1,48 @@
-﻿using FarmApp.Domain.Core.Entities;
-using FarmApp.Domain.Interfaces.Repositories;
-using FarmApp.Domain.Interfaces.UnitOfWorks;
-using FarmApp.Infrastructure.Data.Repositoreies;
+﻿using FarmAppServer.BusinessModels;
+using FarmAppServer.ServiceModels;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace FarmAppServer.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly IUnitOfWork unitOfWork;
-        public UserController(IUnitOfWork uof)
+        private readonly UserService userService;
+        public UserController(UserService userService)
         {
-            unitOfWork = uof;
+            this.userService = userService;
         }
 
-        [HttpPost]
-        public IActionResult Post(User user)
+        [HttpGet("View")]
+        public async Task<IActionResult> GetDataFromView()
         {
-            var results = new List<ValidationResult>();
-            var context = new ValidationContext(user);
-            if (!Validator.TryValidateObject(user, context, results, true))
-            {
-                foreach (var error in results)
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
-            //User user = new User
-            //{
-            //    Login = "pidr",
-            //    Password = "123",
-            //    UserName = "sad",
-            //    IsDeleted = true,
-            //};
-            unitOfWork.UserRepository.Create(user);
-            unitOfWork.Save();
-            return Ok(user);
+            return Ok(await userService.GetDataFromView());
+        }
+
+        [HttpPost("GetToken")]
+        public async Task<IActionResult> GetToken(Request<UserAutorization> request)
+        {
+            return Ok(await userService.GetToken(request));
+        }
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(Request<UserData> request)
+        {
+            return Ok(await userService.CreateUser(request));
+        }
+
+        [HttpPut("Update")]
+        public async Task<IActionResult> Update(Request<UserData> request)
+        {
+            return Ok(await userService.UpdateUser(request));
+        }
+
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> Delete(Request<UserData> request)
+        {
+            return Ok(await userService.UpdateUser(request));
         }
     }
 }

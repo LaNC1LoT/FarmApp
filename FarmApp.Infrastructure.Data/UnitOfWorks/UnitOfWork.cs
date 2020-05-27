@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace FarmApp.Infrastructure.Data.UnitOfWorks
 {
     public class UnitOfWork : IUnitOfWork
-    { 
+    {
         #region Constructor
 
         private readonly FarmAppContext farmAppContext;
