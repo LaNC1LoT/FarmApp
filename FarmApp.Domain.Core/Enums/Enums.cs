@@ -73,10 +73,11 @@ namespace FarmApp.Domain.Core.Enums
 
     public enum Result
     {
-        Success = 1,
-        UnknownError = 2,
-        NotFound = 3,
-        NotAccess = 4,
-        NotValid = 5
+        Success,
+        Error,
+        UnknownError,
+        NotFound,
+        NotAccess,
+        NotValid
     }
 }

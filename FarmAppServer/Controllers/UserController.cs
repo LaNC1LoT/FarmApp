@@ -42,7 +42,7 @@ namespace FarmAppServer.Controllers
         [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(Request<UserData> request)
         {
-            return Ok(await userService.UpdateUser(request));
+            return Ok(await userService.DeleteUser(request));
         }
     }
 }

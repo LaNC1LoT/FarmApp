@@ -16,12 +16,19 @@ namespace FarmAppServer.BusinessModels
 
     public class UserToken
     {
-        public string Token { get; set; }
-        public UserLogin UserLogin {get; set;}
+        public IEnumerable<ModelState> Validations { get; set; }
+        public UserLogin UserLogin { get; set; }
+    }
+
+    public class UserCrud
+    {
+        public IEnumerable<ModelState> Validations { get; set; }
+        public UserData User { get; set; }
     }
 
     public class UserLogin
     {
+        public string Token { get; set; }
         public string Login { get; set; }
         public string UserName { get; set; }
         public string RoleName { get; set; }

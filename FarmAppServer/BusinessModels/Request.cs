@@ -11,7 +11,6 @@ namespace FarmAppServer.BusinessModels
     {
         public Guid? Id { get; set; }
         public DateTime? Date { get; set; }
-        public Api Method { get; set; }
         public TData Data { get; set; }
     }
 
@@ -19,6 +18,8 @@ namespace FarmAppServer.BusinessModels
         where TData : class
     {
         public Result Result { get; set; }
+        public string Title { get; set; }
+        public string Message { get; set; }
         public TData Data { get; set; }
     }
 }
